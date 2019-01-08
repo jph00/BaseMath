@@ -1,6 +1,6 @@
 # BaseMath
 
-Basic math functions for float and double arrays in Swift, with no dependencies. Generally around 3-5x faster than standard swift loops or maps. These functions are provided (all also have an in-place version suffixed with `_` and a reduction version prefixed with `sum` - see below for details):
+Basic math functions for float and double arrays in Swift, with no dependencies, for Mac or Linux. Generally around 3-5x faster than standard swift loops or maps. These functions are provided (all also have an in-place version suffixed with `_` and a reduction version prefixed with `sum` - see below for details):
 
 - Binary functions,: `min`, `max`, `pow`, `atan2`, `copysign`, `fdim`, `fmax`, `fmin`, `hypot`, `nextafter`, `add`, `sub`, `mul`, `div`, `subRev`, `divRev`
 - Unary functions,: `acos`, `acosh`, `asin`, `asinh`, `atan`, `atanh`, `cbrt`, `cos`, `cosh`, `erf`, `erfc`, `exp`, `exp2`, `expm1`, `log`, `log10`, `log1p`, `log2`, `logb`, `nearbyint`, `rint`, `sin`, `sinh`, `tan`, `tanh`, `tgamma`
@@ -19,4 +19,4 @@ To avoid surprises, you might prefer to use the provided `AlignedStorage` struct
 
 After `import BaseVector` you'll find that all the standard unary and binary math functions have been added to `Array` for floats and doubles, along with reduction versions of each which start with `sum` (e.g `sumabs`, `sumcos`, etc).
 
-See the test suite for examples of use.
+See the test suite for examples of use (note that tests won't run on Mac due to objective-c xctest issues).
