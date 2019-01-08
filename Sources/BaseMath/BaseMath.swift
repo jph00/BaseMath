@@ -70,9 +70,6 @@ extension Float : SupportsBasicMath {
   @inlinable public func subRev(_ b: Float) -> Float {return b - self}
   @inlinable public func divRev(_ b: Float) -> Float {return b / self}
 
-  @inlinable public func min(_ b: Float) -> Float {return Swift.min(self, b)}
-  @inlinable public func max(_ b: Float) -> Float {return Swift.max(self, b)}
-
   @inlinable public func acos() -> Float {return Foundation.acos(self)}
   @inlinable public func acosh() -> Float {return Foundation.acosh(self)}
   @inlinable public func asin() -> Float {return Foundation.asin(self)}
@@ -100,6 +97,9 @@ extension Float : SupportsBasicMath {
   @inlinable public func tanh() -> Float {return Foundation.tanh(self)}
   @inlinable public func tgamma() -> Float {return Foundation.tgamma(self)}
 
+  @inlinable public func min(_ b: Float) -> Float {return Swift.min(self, b)}
+  @inlinable public func max(_ b: Float) -> Float {return Swift.max(self, b)}
+
   @inlinable public func abs() -> Float {return Swift.abs(self)}
 
   @inlinable public func pow(_ b: Float) -> Float {return Foundation.pow(self, b)}
@@ -123,9 +123,6 @@ extension Double : SupportsBasicMath {
 
   @inlinable public func subRev(_ b: Double) -> Double {return b - self}
   @inlinable public func divRev(_ b: Double) -> Double {return b / self}
-
-  @inlinable public func min(_ b: Double) -> Double {return Swift.min(self, b)}
-  @inlinable public func max(_ b: Double) -> Double {return Swift.max(self, b)}
 
   @inlinable public func acos() -> Double {return Foundation.acos(self)}
   @inlinable public func acosh() -> Double {return Foundation.acosh(self)}
@@ -153,6 +150,9 @@ extension Double : SupportsBasicMath {
   @inlinable public func tan() -> Double {return Foundation.tan(self)}
   @inlinable public func tanh() -> Double {return Foundation.tanh(self)}
   @inlinable public func tgamma() -> Double {return Foundation.tgamma(self)}
+
+  @inlinable public func min(_ b: Double) -> Double {return Swift.min(self, b)}
+  @inlinable public func max(_ b: Double) -> Double {return Swift.max(self, b)}
 
   @inlinable public func abs() -> Double {return Swift.abs(self)}
 

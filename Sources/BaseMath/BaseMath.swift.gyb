@@ -35,13 +35,12 @@ extension ${t} : SupportsBasicMath {
   @inlinable public func subRev(_ b: ${t}) -> ${t} {return b - self}
   @inlinable public func divRev(_ b: ${t}) -> ${t} {return b / self}
 
-  % for f in funcs1:
-  @inlinable public func ${f}(_ b: ${t}) -> ${t} {return Swift.${f}(self, b)}
-  % end # f,s
-
   % for f in funcs2:
   @inlinable public func ${f}() -> ${t} {return Foundation.${f}(self)}
   % end # f
+
+  @inlinable public func min(_ b: ${t}) -> ${t} {return Swift.min(self, b)}
+  @inlinable public func max(_ b: ${t}) -> ${t} {return Swift.max(self, b)}
 
   @inlinable public func abs() -> ${t} {return Swift.abs(self)}
 

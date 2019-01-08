@@ -91,7 +91,6 @@ extension TestProtocol {
     XCTAssertEqual(r4, exp)
   }
 
-
   func testPow() {
     let exp = T(zip(v1,v2).map({$0.pow($1)}))
     let r1 = v1.pow(v2)
