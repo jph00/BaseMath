@@ -3,9 +3,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "SwiftyMKL",
+    name: "BaseMath",
     products: [
-      .library( name: "BaseMath", type: .static, targets: ["BaseMath"]),
+      .library( name: "BaseMath", targets: ["BaseMath"]),
     ],
     targets: [
         .target( name: "CBaseMath"),
