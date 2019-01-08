@@ -1,0 +1,14 @@
+#include "include/CBaseMath.h"
+#include <math.h>
+
+% for t in ('float','double'):
+
+${t} smSum_${t}(const ${t}* restrict pSrc, const int len) {
+  ${t} r = 0;
+  #pragma clang loop vectorize(enable) interleave_count(8)
+  for (int i=0; i<len; ++i) { r += pSrc[i]; }
+  return r;
+}
+
+% end # t
+

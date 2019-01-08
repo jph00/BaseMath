@@ -1,0 +1,57 @@
+import Foundation
+import CBaseMath
+
+%{ from mathfuncs import * }%
+
+precedencegroup ExponentiationPrecedence { associativity: right higherThan: MultiplicationPrecedence }
+infix operator ^^: ExponentiationPrecedence
+
+public protocol SupportsBasicMath:BinaryFloatingPoint {
+  typealias Element=Self
+  typealias PtrT = UnsafePointer<Element> 
+  typealias MutPtrT = UnsafeMutablePointer<Element>
+  init(_ value: Self)
+  init()
+
+% for f in binfs:
+  func ${f}(_ b: Self) -> Self
+% end # f
+% for f in funcs2:
+  func ${f}() -> Self
+% end # f
+
+  func abs() -> Self
+  static func sum(_ a:PtrT, _ n:Int32) -> Element
+
+  static func ^^(x:Self, a:Self) -> Self
+}
+
+% for t in types:
+extension ${t} : SupportsBasicMath {
+  % for f,op in zip(op_fs,ops):
+  @inlinable public func ${f}(_ b: ${t}) -> ${t} {return self ${op} b}
+  % end # f,op
+
+  @inlinable public func subRev(_ b: ${t}) -> ${t} {return b - self}
+  @inlinable public func divRev(_ b: ${t}) -> ${t} {return b / self}
+
+  % for f in funcs1:
+  @inlinable public func ${f}(_ b: ${t}) -> ${t} {return Swift.${f}(self, b)}
+  % end # f,s
+
+  % for f in funcs2:
+  @inlinable public func ${f}() -> ${t} {return Foundation.${f}(self)}
+  % end # f
+
+  @inlinable public func abs() -> ${t} {return Swift.abs(self)}
+
+  % for f in funcs3:
+  @inlinable public func ${f}(_ b: ${t}) -> ${t} {return Foundation.${f}(self, b)}
+  % end # f
+
+  @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_${t.lower()}(a, n) }
+
+  public static func ^^(x:${t}, a:${t}) -> ${t} { return x.pow(a) }
+}
+% end # t
+

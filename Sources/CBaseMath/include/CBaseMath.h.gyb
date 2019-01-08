@@ -1,0 +1,12 @@
+%{
+  import re
+  lines = []
+  for l in open('../CBaseMath.c').readlines():
+    s = re.search(r'^(\w.+){\s*$', l)
+    if s: lines.append(s.group(1))
+}%
+
+% for l in lines:
+${l};
+% end
+

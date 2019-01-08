@@ -1,0 +1,13 @@
+*.so
+*.dylib
+Darwin/
+Darwin.tgz
+Linux/
+Linux.tgz
+*.swp
+intel64/
+__pycache__
+.DS_Store
+/.build
+/Packages
+/*.xcodeproj
