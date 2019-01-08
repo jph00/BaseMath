@@ -5,6 +5,12 @@ Basic math functions for float and double arrays in Swift, with no dependencies,
 - Binary functions,: `min`, `max`, `pow`, `atan2`, `copysign`, `fdim`, `fmax`, `fmin`, `hypot`, `nextafter`, `add`, `sub`, `mul`, `div`, `subRev`, `divRev`
 - Unary functions,: `acos`, `acosh`, `asin`, `asinh`, `atan`, `atanh`, `cbrt`, `cos`, `cosh`, `erf`, `erfc`, `exp`, `exp2`, `expm1`, `log`, `log10`, `log1p`, `log2`, `logb`, `nearbyint`, `rint`, `sin`, `sinh`, `tan`, `tanh`, `tgamma`
 
+Use it with Swift Package Manager by adding to your `Package.swift`:
+
+    dependencies: [
+        .package(url:"https://github.com/jph00/BaseMath.git", from: "1.0.0"),
+    ]
+
 For reasonable performance, compile with `make` (which is also required if you make changes to the `gyb` templates) or use:
 
     swift build -Xswiftc -Ounchecked -Xcc -ffast-math -Xcc -O2 -Xcc -march=native
