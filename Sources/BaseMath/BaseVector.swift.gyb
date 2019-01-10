@@ -1,31 +1,14 @@
 import Foundation
 
-%{ from mathfuncs import * }%
+%{ import sys; sys.path.append('../..'); from mathfuncs import * }%
 
 extension SupportsBasicMath {
 % for f in binfs:
   @inlinable public static func ${f}(_ n:Int, _ pSrc:PtrT, _ pSrc2:PtrT,  _ pDst:MutPtrT) { for i in 0..<n { pDst[i] = pSrc[i].${f}(pSrc2[i]) } }
   @inlinable public static func ${f}(_ n:Int, _ pSrc:PtrT, _ val:Element, _ pDst:MutPtrT) { for i in 0..<n { pDst[i] = pSrc[i].${f}(val     ) } }
-
-  @inlinable public static func sum${f}(_ n:Int, _ pSrc:PtrT, _ pSrc2: PtrT)->Element {
-    var r:Element = 0.0;
-    for i in 0..<n { r += pSrc[i].${f}(pSrc2[i]) }
-    return r
-  }
-  @inlinable public static func sum${f}(_ n:Int, _ pSrc:PtrT, _ pSrc2: Element)->Element {
-    var r:Element = 0.0;
-    for i in 0..<n { r += pSrc[i].${f}(pSrc2) }
-    return r
-  }
 % end
 % for f in unaryfs:
   @inlinable public static func ${f}(_ n:Int, _ pSrc:PtrT, _ pDst:MutPtrT) { for i in 0..<n { pDst[i] = pSrc[i].${f}() } }
-
-  @inlinable public static func sum${f}(_ n:Int, _ pSrc:PtrT)->Element {
-    var r:Element = 0.0;
-    for i in 0..<n { r += pSrc[i].${f}() }
-    return r
-  }
 % end
 }
 
@@ -41,15 +24,29 @@ public protocol BaseVector: RandomAccessCollection, MutableCollection, Expressib
   func copy()->Self
   var p:MutPtrT {get}
 
+  typealias UnaryF = (Element)->(Element)
+  typealias BinaryF = (Element,Element)->(Element)
+  typealias TernaryF = (Element,Element,Element)->(Element)
+
+  func map(_ f:UnaryF, _ dest: Self)
+  func map(_ f:BinaryF, _ b:Self, _ dest: Self)
+  func map(_ f:TernaryF, _ b:Self, _ c:Self, _ dest: Self)
+
+  func sum(_ f:UnaryF)->Element
+  func sum(_ f:BinaryF, _ b:Self)->Element
+  func sum(_ f:TernaryF, _ b:Self, _ c:Self)->Element
+
 % for f in binfs:
   func ${f}(_ b: Self, _ dest:Self)
   func ${f}_(_ b:Self)
-  func sum${f}(_ b:Self)->Element
 % end # f
 
 % for f in unaryfs:
   func ${f}(_ dest:Self)
   func ${f}_()
+% end # f
+
+% for f in unarycfs:
   func sum${f}()->Element
 % end # f
 
@@ -61,13 +58,47 @@ extension BaseVector {
   public var indices: Range<Int> { return 0..<endIndex }
   public var startIndex: Int { return 0 }
 
-  public func new(_ size:Int)->Self { return .init(size) }
-  public func new()  -> Self { return new(count) }
-  public var c:Int {get {return count}}
+  @usableFromInline var storeKey:String { get { return "BaseVector\(Element.self)" } }
+  @usableFromInline var tempStore:Self { get {
+    if let r = Thread.current.threadDictionary[storeKey] as? Self {
+      if (r.count == count) { return r }
+    }
+    return Thread.setToTLS(Self(count), storeKey)
+  }}
 
-  public static func ==(lhs:Self, rhs:Self) -> Bool { return lhs.elementsEqual(rhs) }
-  public static func ==(lhs:Array<Element>, rhs:Self) -> Bool { return self.init(lhs) == rhs }
-  public static func ==(lhs:Self, rhs:Array<Element>) -> Bool { return lhs == self.init(rhs) }
+  @inlinable public func new(_ size:Int)->Self { return .init(size) }
+  @inlinable public func new()  -> Self { return new(count) }
+  @inlinable public var c:Int32 {get {return numericCast(count)}}
+
+  @inlinable public func sum(_ f:UnaryF)->Element {
+    self.map(f, tempStore)
+    return tempStore.sum()
+  }
+  @inlinable public func sum(_ f:BinaryF, _ b:Self)->Element {
+    self.map(f, b, tempStore)
+    return tempStore.sum()
+  }
+  @inlinable public func sum(_ f:TernaryF, _ b:Self, _ c:Self)->Element {
+    self.map(f, b, c, tempStore)
+    return tempStore.sum()
+  }
+
+  @inlinable public func map<T:BaseVector>(_ f:UnaryF, _ dest:T) where Self.Element==T.Element {
+    let pSrc = p; let pDest = dest.p; let n = count
+    for i in 0..<n {pDest[i] = f(pSrc[i])}
+  }
+  @inlinable public func map(_ f:BinaryF, _ b:Self, _ dest: Self) {
+    let pSrc = p; let pB = b.p; let pDest = dest.p; let n = count
+    for i in 0..<n {pDest[i] = f(pSrc[i], pB[i])}
+  }
+  @inlinable public func map(_ f:TernaryF, _ b:Self, _ c:Self, _ dest: Self) {
+    let pSrc = p; let pB = b.p; let pC = c.p; let pDest = dest.p; let n = count
+    for i in 0..<n {pDest[i] = f(pSrc[i], pB[i], pC[i])}
+  }
+
+  @inlinable public static func ==(lhs:Self, rhs:Self) -> Bool { return lhs.elementsEqual(rhs) }
+  @inlinable public static func ==(lhs:Array<Element>, rhs:Self) -> Bool { return self.init(lhs) == rhs }
+  @inlinable public static func ==(lhs:Self, rhs:Array<Element>) -> Bool { return lhs == self.init(rhs) }
 
   @inlinable public func new_call(_ f:(Self)         ->()              )->Self { let res = new(); f(      res); return res }
   @inlinable public func new_call(_ f:(Self, Self)   ->(), _ b:Self    )->Self { let res = new(); f(b,    res); return res }
@@ -78,21 +109,23 @@ extension BaseVector {
 
   @inlinable public func sum() -> Element { return Element.sum(p, numericCast(c)) }
 
+% for f in unarycfs:
+  @inlinable public func sum${f}()->Element { return Element.sum${f}(p, numericCast(c)) }
+% end # f
+
 % for f in binfs:
   % for t in 'Self','Element':
   %{ c = 'b' if t=='Element' else 'b.p' }%
   @inlinable public func ${f} (_ b:${t})->Self { return new_call(${f}, b) }
-  @inlinable public func ${f} (_ b:${t}, _ dest:Self) { Element.${f}(c, self.p, ${c}, dest.p) }
+  @inlinable public func ${f} (_ b:${t}, _ dest:Self) { Element.${f}(count, self.p, ${c}, dest.p) }
   @inlinable public func ${f}_(_ b:${t}) { ${f}(b, self) }
-  @inlinable public func sum${f}(_ b:${t})->Element { return Element.sum${f}(c, self.p, ${c}) }
   % end
 % end # f
 
 % for f in unaryfs:
   @inlinable public func ${f} ()->Self { return new_call(${f}) }
-  @inlinable public func ${f}(_ dest:Self) { Element.${f}(c, self.p, dest.p) }
+  @inlinable public func ${f}(_ dest:Self) { Element.${f}(count, self.p, dest.p) }
   @inlinable public func ${f}_() { ${f}(self) }
-  @inlinable public func sum${f}()->Element { return Element.sum${f}(c, self.p) }
 % end # f
 
 % for f,op in zip(op_fs,ops):

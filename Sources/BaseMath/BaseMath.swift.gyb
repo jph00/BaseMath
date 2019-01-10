@@ -1,7 +1,16 @@
 import Foundation
 import CBaseMath
 
-%{ from mathfuncs import * }%
+%{ import sys; sys.path.append('../..'); from mathfuncs import * }%
+
+extension SupportsBasicMath {
+  public func string(_ digits:Int) -> String {
+    let fmt = NumberFormatter()
+    fmt.minimumFractionDigits = digits
+    fmt.maximumFractionDigits = digits
+    return fmt.string(from: self.nsNumber) ?? "\(self)"
+  }
+}
 
 precedencegroup ExponentiationPrecedence { associativity: right higherThan: MultiplicationPrecedence }
 infix operator ^^: ExponentiationPrecedence
@@ -13,6 +22,8 @@ public protocol SupportsBasicMath:BinaryFloatingPoint {
   init(_ value: Self)
   init()
 
+  var nsNumber:NSNumber {get}
+
 % for f in binfs:
   func ${f}(_ b: Self) -> Self
 % end # f
@@ -20,17 +31,27 @@ public protocol SupportsBasicMath:BinaryFloatingPoint {
   func ${f}() -> Self
 % end # f
 
+  static func sqr(_ a:Self) -> Self
+  func sqr() -> Self
   func abs() -> Self
   static func sum(_ a:PtrT, _ n:Int32) -> Element
+  % for f in unarycfs:
+  static func sum${f}(_ a:PtrT, _ n:Int32)->Element
+  % end
 
   static func ^^(x:Self, a:Self) -> Self
 }
 
 % for t in types:
 extension ${t} : SupportsBasicMath {
+  public var nsNumber:NSNumber { return NSNumber(value: self) }
+
   % for f,op in zip(op_fs,ops):
   @inlinable public func ${f}(_ b: ${t}) -> ${t} {return self ${op} b}
   % end # f,op
+
+  @inlinable public static func sqr(_ a:${t}) -> ${t} {return  a  * a  }
+  @inlinable public        func sqr(        ) -> ${t} {return self*self}
 
   @inlinable public func subRev(_ b: ${t}) -> ${t} {return b - self}
   @inlinable public func divRev(_ b: ${t}) -> ${t} {return b / self}
@@ -49,6 +70,9 @@ extension ${t} : SupportsBasicMath {
   % end # f
 
   @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_${t.lower()}(a, n) }
+  % for f in unarycfs:
+  @inlinable public static func sum${f}(_ a:PtrT, _ n:Int32)->Element { return smSum_${f}_${t.lower()}(a, n) }
+  % end
 
   public static func ^^(x:${t}, a:${t}) -> ${t} { return x.pow(a) }
 }

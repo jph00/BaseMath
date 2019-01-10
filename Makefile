@@ -2,7 +2,7 @@ ifeq ($(mode),)
 mode := debug
 endif
 
-link_args := -Xswiftc -Ounchecked $(addprefix -Xcc ,-ffast-math -O3 -march=native)
+link_args := -Xswiftc -Ounchecked $(addprefix -Xcc ,-O2 -ffast-math -ffp-contract=fast -march=native)
 
 gybs := $(shell find Sources Tests -type f -name '*.gyb')
 conv_gybs := $(patsubst %.gyb,%,$(gybs))
@@ -38,7 +38,8 @@ gyb: $(sources)
 %.h: %.h.gyb
 	gyb --line-directive '' -o $@ $<
 
-Sources/BaseMath/BaseMath.swift Sources/BaseMath/BaseVector.swift: Sources/BaseMath/mathfuncs.py
+Sources/BaseMath/BaseMath.swift Sources/BaseMath/BaseVector.swift Sources/CBaseMath/CBaseMath.c: mathfuncs.py
+Sources/CBaseMath/include/CBaseMath.h: Sources/CBaseMath/CBaseMath.c
 
 .PHONY: clean   
 clean:

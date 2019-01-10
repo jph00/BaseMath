@@ -1,14 +1,38 @@
 #include "include/CBaseMath.h"
-#include <math.h>
+#include <tgmath.h>
 
-% for t in ('float','double'):
+%{ import sys; sys.path.append('../..'); from mathfuncs import * }%
+
+% for t,s in zip(ctypes,['f','']):
+
+void sm_add_${t}(const ${t}* restrict pSrc, const ${t} val, ${t}* restrict pDst, const int len) {
+  for (int i=0; i<len; ++i) { pDst[i] = pSrc[i]+val; }
+}
 
 ${t} smSum_${t}(const ${t}* restrict pSrc, const int len) {
   ${t} r = 0;
-  #pragma clang loop vectorize(enable) interleave_count(8)
+  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { r += pSrc[i]; }
   return r;
 }
+
+${t} sqr${s}(const ${t} a) {return a*a;}
+
+  % for f in unarycfs:
+${t} smSum_${f}_${t}(const ${t}* restrict pSrc, const int len) {
+  ${t} r = 0;
+  #pragma ivdep
+  #pragma clang loop interleave_count(8)
+  for (int i=0; i<len; ++i) { r += ${f}${s}(pSrc[i]); }
+  return r;
+}
+
+void sm_${f}_${t}(const ${t}* restrict pSrc, ${t}* restrict pDst, const int len) {
+  #pragma ivdep
+  #pragma clang loop interleave_count(8)
+  for (int i=0; i<len; ++i) { pDst[i] = ${f}${s}(pSrc[i]); }
+}
+  % end # f
 
 % end # t
 

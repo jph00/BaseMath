@@ -11,6 +11,7 @@ let package = Package(
         .target( name: "CBaseMath"),
         .target( name: "BaseMath", dependencies: ["CBaseMath"]),
         .testTarget( name: "BaseMathTests", dependencies: ["BaseMath"]),
+        .target( name: "bench", dependencies: ["BaseMath"]),
     ]
 )
 

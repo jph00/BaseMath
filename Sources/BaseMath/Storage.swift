@@ -15,9 +15,9 @@ public protocol ComposedStorage {
   var endIndex:Int {get}
   subscript(i:Int)->Storage.Element {get set}
 }
-extension ComposedStorage {
-  public subscript(i:Int)->Storage.Element { get {return data[i]} set {data[i] = newValue} }
-  public var endIndex: Int { return data.count }
+public extension ComposedStorage {
+  subscript(i:Int)->Storage.Element { get {return data[i]} set {data[i] = newValue} }
+  var endIndex: Int { return data.count }
 }
 
 extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable where Element:SupportsBasicMath {
