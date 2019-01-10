@@ -1,9 +1,20 @@
 # BaseMath
 
-Basic math functions for float and double arrays in Swift, with no dependencies, via the `BaseVector` protocol. They are generally around 3-5x faster than standard swift loops or maps, since they use pointers, which avoids the overhead of Swift's copy-on-write checking. The following functions are provided (all also have a version suffixed with `_` and a version prefixed with `sum` - see below of details):
+<<<<<<< HEAD
+Basic math functions for float and double arrays in Swift for Mac or Linux, with no dependencies, via the `BaseVector` protocol. They are generally around 3-5x faster than standard swift loops or maps, since they use pointers, which avoids the overhead of Swift's copy-on-write checking. The following functions are provided (all also have a version suffixed with `_` and a version prefixed with `sum` - see below of details):
 
 - Binary functions,: `sqr`, `abs`, `min`, `max`, `pow`, `atan2`, `copysign`, `fdim`, `fmax`, `fmin`, `hypot`, `nextafter`, `add`, `sub`, `mul`, `div`, `subRev`, `divRev`
 - Unary functions,: `acos`, `acosh`, `asin`, `asinh`, `atan`, `atanh`, `cbrt`, `cos`, `cosh`, `erf`, `erfc`, `exp`, `exp2`, `expm1`, `log`, `log10`, `log1p`, `log2`, `logb`, `nearbyint`, `rint`, `sin`, `sinh`, `tan`, `tanh`, `tgamma`
+
+Use it with Swift Package Manager by adding to your `Package.swift`:
+
+    dependencies: [
+        .package(url:"https://github.com/jph00/BaseMath.git", from: "1.0.0"),
+    ]
+
+For reasonable performance, compile with `make` (which is also required if you make changes to the `gyb` templates) or use:
+
+    swift build -Xswiftc -Ounchecked -Xcc -ffast-math -Xcc -O2 -Xcc -march=native
 
 This library is used by [SwiftyMKL](https://github.com/jph00/SwiftyMKL), which adds more optimized versions of the functions from Intel's Performance Libraries, along with various linear algebra and statistical functions.
 
@@ -15,5 +26,5 @@ To avoid surprises, you might prefer to use the provided `AlignedStorage` struct
 
 After `import BaseVector` you'll find that all the standard unary and binary math functions have been added to `Array` for floats and doubles, along with reduction versions of each which start with `sum` (e.g `sumabs`, `sumcos`, etc).
 
-See the test suite for examples of use. For more information on background and implementation details, see [this article] \(TBA).
+See the test suite for examples of use (note that tests won't run on Mac due to objective-c xctest issues). For more information on background and implementation details, see [this article] \(TBA).
 
