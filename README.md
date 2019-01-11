@@ -1,6 +1,5 @@
 # BaseMath
 
-<<<<<<< HEAD
 Basic math functions for float and double arrays in Swift for Mac or Linux, with no dependencies, via the `BaseVector` protocol. They are generally around 3-5x faster than standard swift loops or maps, since they use pointers, which avoids the overhead of Swift's copy-on-write checking. The following functions are provided (all also have a version suffixed with `_` and a version prefixed with `sum` - see below of details):
 
 - Binary functions,: `sqr`, `abs`, `min`, `max`, `pow`, `atan2`, `copysign`, `fdim`, `fmax`, `fmin`, `hypot`, `nextafter`, `add`, `sub`, `mul`, `div`, `subRev`, `divRev`
