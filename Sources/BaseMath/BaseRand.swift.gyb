@@ -1,0 +1,52 @@
+import CBaseMath
+
+public class RandGen {
+  public let ptr:OpaquePointer?
+  public init() { ptr=RandGen_create() }
+  deinit { RandGen_destroy(ptr) }
+}
+
+%{
+int_types = [
+  ['uniform_int_distribution', '_ a:#, _ b:#', 'a,b'],
+  ['binomial_distribution', '_ t:#, _ p:Double', 't,p'],
+  ['negative_binomial_distribution', '_ k:#, _ p:Double', 'k,p'],
+  ['geometric_distribution', '_ p:Double', 'p'],
+  ['poisson_distribution', '_ mean:Double', 'mean'],
+]
+real_types = [
+  ['uniform_real_distribution', '_ a:#,_ b:#', 'a,b'],
+  ['exponential_distribution', '_ l:#', 'l'],
+  ['gamma_distribution', '_ a:#,_ b:#', 'a,b'],
+  ['weibull_distribution', '_ a:#,_ b:#', 'a,b'],
+  ['normal_distribution', '_ mean:#,_ stddev:#', 'mean,stddev'],
+  ['lognormal_distribution', '_ m:#,_ s:#', 'm,s'],
+  ['chi_squared_distribution', '_ n:#', 'n'],
+  ['cauchy_distribution', '_ a:#,_ b:#', 'a,b'],
+  ['fisher_f_distribution', '_ m:#,_ n:#', 'm,n'],
+  ['student_t_distribution', '_ n:#', 'n'],
+]
+types  = [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in int_types  for t1,t2 in [['Int32','int'],['Int','long']]]
+types += [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in real_types for t1,t2 in [['Float','float'],['Double','double']]]
+}%
+
+public protocol Distribution {
+  associatedtype Element:SignedNumeric
+  subscript()->Element {get}
+  func gen()->Element
+}
+
+% for n,t1,t2,p1,p2 in types:
+public class ${n}_${t1}:Distribution {
+  public let ptr:OpaquePointer?
+  @usableFromInline let g:RandGen
+  public init(_ g_:RandGen, ${p1}) { ptr=${n}_${t2}_create(${p2}); g=g_ }
+  deinit { ${n}_${t2}_destroy(ptr) }
+  @inlinable public subscript ()->${t1} { return gen() }
+  @inlinable public func gen()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+}
+extension ${t1} {
+  public static func ${n}(_ g_:RandGen, ${p1})->${n}_${t1} {return ${n}_${t1}(g_, ${p2})}
+}
+% end
+

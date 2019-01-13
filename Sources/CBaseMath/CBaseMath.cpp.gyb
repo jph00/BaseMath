@@ -1,0 +1,85 @@
+#include "include/CBaseMath.h"
+#include <tgmath.h>
+#include <random>
+
+%{ import sys; sys.path.append('../..'); from mathfuncs import * }%
+
+using namespace std; 
+
+extern "C" {
+
+struct RandGenC:mt19937 {}; 
+typedef struct RandGenC RandGenC;
+RandGenC* RandGen_create() { return (RandGenC*)(new mt19937(random_device()())); }
+void RandGen_destroy(RandGenC* v) { delete(v); }
+
+%{
+int_types = [
+  ['uniform_int_distribution', '# a,# b', 'a,b'],
+  ['binomial_distribution', '# t, double p', 't,p'],
+  ['negative_binomial_distribution', '# k, double p', 'k,p'],
+  ['geometric_distribution', 'double p', 'p'], 
+  ['poisson_distribution', 'double mean', 'mean'], 
+]
+real_types = [
+  ['uniform_real_distribution', '# a,# b', 'a,b'],
+  ['exponential_distribution', '# l', 'l'],
+  ['gamma_distribution', '# a,# b', 'a,b'],
+  ['weibull_distribution', '# a,# b', 'a,b'],
+  ['normal_distribution', '# mean,# stddev', 'mean,stddev'],
+  ['lognormal_distribution', '# m,# s', 'm,s'],
+  ['chi_squared_distribution', '# n', 'n'],
+  ['cauchy_distribution', '# a,# b', 'a,b'],
+  ['fisher_f_distribution', '# m,# n', 'm,n'],
+  ['student_t_distribution', '# n', 'n'],
+]
+types  = [(n,t,p1.replace('#',t),p2) for n,p1,p2 in int_types  for t in ['int','long']]
+types += [(n,t,p1.replace('#',t),p2) for n,p1,p2 in real_types for t in ['float','double']]
+}%
+
+% for n,t,p1,p2 in types:
+%{ suf = f'<{t}>' }%
+
+struct ${n}_${t}C:${n}${suf} {};
+typedef struct ${n}_${t}C ${n}_${t}C;
+${n}_${t}C* ${n}_${t}_create(${p1}) { return (${n}_${t}C*)(new ${n}${suf}(${p2})); }
+void ${n}_${t}_destroy(${n}_${t}C* v) { delete(v); }
+${t} ${n}_${t}_call(${n}_${t}C* p, RandGenC* g) {return (*p)(*g);}
+
+% end # n,t
+
+% for t,s in zip(ctypes,['f','']):
+
+void sm_add_${t}(const ${t}* __restrict__ pSrc, const ${t} val, ${t}* __restrict__ pDst, const int len) {
+  for (int i=0; i<len; ++i) { pDst[i] = pSrc[i]+val; }
+}
+
+${t} smSum_${t}(const ${t}* __restrict__ pSrc, const int len) {
+  ${t} r = 0;
+  #pragma clang loop interleave_count(8)
+  for (int i=0; i<len; ++i) { r += pSrc[i]; }
+  return r;
+}
+
+${t} sqr${s}(const ${t} a) {return a*a;}
+
+  % for f in unarycfs:
+${t} smSum_${f}_${t}(const ${t}* __restrict__ pSrc, const int len) {
+  ${t} r = 0;
+  #pragma ivdep
+  #pragma clang loop interleave_count(8)
+  for (int i=0; i<len; ++i) { r += ${f}${s}(pSrc[i]); }
+  return r;
+}
+
+void sm_${f}_${t}(const ${t}* __restrict__ pSrc, ${t}* __restrict__ pDst, const int len) {
+  #pragma ivdep
+  #pragma clang loop interleave_count(8)
+  for (int i=0; i<len; ++i) { pDst[i] = ${f}${s}(pSrc[i]); }
+}
+  % end # f
+
+% end # t
+
+}
+

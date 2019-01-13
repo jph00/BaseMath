@@ -7,6 +7,8 @@ link_args := -Xswiftc -Ounchecked $(addprefix -Xcc ,-O2 -ffast-math -ffp-contrac
 gybs := $(shell find Sources Tests -type f -name '*.gyb')
 conv_gybs := $(patsubst %.gyb,%,$(gybs))
 sources := $(conv_gybs) $(shell find Sources Tests -type f -name '*.swift')
+sources := $(sources) $(shell find Sources Tests -type f -name '*.cpp')
+headers := $(sources) $(shell find Sources Tests -type f -name '*.hpp')
 sources := $(sources) $(shell find Sources Tests -type f -name '*.c')
 headers := $(sources) $(shell find Sources Tests -type f -name '*.h')
 sources := $(sources) $(headers)
@@ -38,8 +40,14 @@ gyb: $(sources)
 %.h: %.h.gyb
 	gyb --line-directive '' -o $@ $<
 
-Sources/BaseMath/BaseMath.swift Sources/BaseMath/BaseVector.swift Sources/CBaseMath/CBaseMath.c: mathfuncs.py
-Sources/CBaseMath/include/CBaseMath.h: Sources/CBaseMath/CBaseMath.c
+%.cpp: %.cpp.gyb
+	gyb --line-directive '' -o $@ $<
+
+%.hpp: %.hpp.gyb
+	gyb --line-directive '' -o $@ $<
+
+Sources/BaseMath/BaseMath.swift Sources/BaseMath/BaseVector.swift Sources/CBaseMath/CBaseMath.cpp: mathfuncs.py
+Sources/CBaseMath/include/CBaseMath.h: Sources/CBaseMath/CBaseMath.cpp
 
 .PHONY: clean   
 clean:

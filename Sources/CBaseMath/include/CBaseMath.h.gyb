@@ -1,14 +1,22 @@
 %{
   import re
   lines = []
-  for l in open('../CBaseMath.c').readlines():
-    s = re.search(r'typedef', l)
+  for l in open('../CBaseMath.cpp').readlines():
+    s = re.search(r'^typedef', l)
     if s: lines.append(l) 
-    s = re.search(r'^(\w.+){\s*$', l)
-    if s: lines.append(s.group(1)+';')
+    s = re.search(r'^(\w[^"]+){', l)
+    if s and not l.startswith('struct'): lines.append(s.group(1)+';')
 }%
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 % for l in lines:
 ${l}
 % end
+
+#ifdef __cplusplus
+}
+#endif
 
