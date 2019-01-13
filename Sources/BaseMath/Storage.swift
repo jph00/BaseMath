@@ -41,16 +41,18 @@ extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equat
 }
 extension UnsafeMutableBufferPointer: FloatVector where Element:SupportsBasicMath { }
 
-public class AlignedStorage<Element:SupportsBasicMath>: FloatVector,ComposedStorage {
+public final class AlignedStorage<Element:SignedNumeric>: BaseVector,ComposedStorage {
   public var data:UnsafeMutableBufferPointer<Element>
 
-  public required init(_ data: UnsafeMutableBufferPointer<Element>) {self.data=data}
-  public required convenience init(_ count:Int)      { self.init(UnsafeMutableBufferPointer(count)) }
-  public required convenience init(_ array:Array<Element>) { self.init(UnsafeMutableBufferPointer(array)) }
+  public init(_ data: UnsafeMutableBufferPointer<Element>) {self.data=data}
+  public convenience init(_ count:Int)      { self.init(UnsafeMutableBufferPointer(count)) }
+  public convenience init(_ array:Array<Element>) { self.init(UnsafeMutableBufferPointer(array)) }
 
   deinit { UnsafeMutableRawBufferPointer(data).deallocate() }
 
   public var p:MutPtrT {get {return data.p}}
   public func copy()->Self { return .init(data.copy()) }
 }
+
+extension AlignedStorage:FloatVector where Element:SupportsBasicMath {}
 
