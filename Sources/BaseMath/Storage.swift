@@ -6,7 +6,8 @@ extension Array where Element:SignedNumeric {
   public var p:UnsafeMutablePointer<Element> {get {return UnsafeMutablePointer(mutating: self)}}
 }
 
-extension Array: BaseVector where Element:SupportsBasicMath { }
+extension Array: BaseVector  where Element:SignedNumeric { }
+extension Array: FloatVector where Element:SupportsBasicMath { }
 
 public protocol ComposedStorage {
   associatedtype Storage:MutableCollection where Storage.Index==Int
@@ -35,17 +36,17 @@ extension UnsafeMutableBufferPointer where Element:SignedNumeric {
   public func copy()->UnsafeMutableBufferPointer { return .init(Array(self)) }
 }
 
-extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable where Element:SupportsBasicMath {
+extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable where Element:SignedNumeric {
   public typealias ArrayLiteralElement=Element
 }
+extension UnsafeMutableBufferPointer: FloatVector where Element:SupportsBasicMath { }
 
-public class AlignedStorage<T:SupportsBasicMath>: BaseVector, ComposedStorage {
-  public typealias Element=T
-  public var data:UnsafeMutableBufferPointer<T>
+public class AlignedStorage<Element:SupportsBasicMath>: FloatVector,ComposedStorage {
+  public var data:UnsafeMutableBufferPointer<Element>
 
-  public required init(_ data: UnsafeMutableBufferPointer<T>) {self.data=data}
+  public required init(_ data: UnsafeMutableBufferPointer<Element>) {self.data=data}
   public required convenience init(_ count:Int)      { self.init(UnsafeMutableBufferPointer(count)) }
-  public required convenience init(_ array:Array<T>) { self.init(UnsafeMutableBufferPointer(array)) }
+  public required convenience init(_ array:Array<Element>) { self.init(UnsafeMutableBufferPointer(array)) }
 
   deinit { UnsafeMutableRawBufferPointer(data).deallocate() }
 

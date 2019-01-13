@@ -2,13 +2,8 @@ import Foundation
 import CBaseMath
 
 
-extension SupportsBasicMath {
-  public func string(_ digits:Int) -> String {
-    let fmt = NumberFormatter()
-    fmt.minimumFractionDigits = digits
-    fmt.maximumFractionDigits = digits
-    return fmt.string(from: self.nsNumber) ?? "\(self)"
-  }
+extension BinaryFloatingPoint where Self: CVarArg {
+  public func string(_ digits:Int) -> String { return String(format: "%.\(digits)f", self) }
 }
 
 precedencegroup ExponentiationPrecedence { associativity: right higherThan: MultiplicationPrecedence }
@@ -71,8 +66,7 @@ public protocol SupportsBasicMath:BinaryFloatingPoint {
   func sqr() -> Self
   func abs() -> Self
   static func sum(_ a:PtrT, _ n:Int32) -> Element
-  static func sumsqr(_ a:PtrT, _ n:Int32)->Element
-  static func sumfabs(_ a:PtrT, _ n:Int32)->Element
+  static func sumabs(_ a:PtrT, _ n:Int32)->Element
   static func sumsqrt(_ a:PtrT, _ n:Int32)->Element
   static func sumacos(_ a:PtrT, _ n:Int32)->Element
   static func sumacosh(_ a:PtrT, _ n:Int32)->Element
@@ -100,6 +94,7 @@ public protocol SupportsBasicMath:BinaryFloatingPoint {
   static func sumtan(_ a:PtrT, _ n:Int32)->Element
   static func sumtanh(_ a:PtrT, _ n:Int32)->Element
   static func sumtgamma(_ a:PtrT, _ n:Int32)->Element
+  static func sumsqr(_ a:PtrT, _ n:Int32)->Element
 
   static func ^^(x:Self, a:Self) -> Self
 }
@@ -161,8 +156,7 @@ extension Float : SupportsBasicMath {
   @inlinable public func nextafter(_ b: Float) -> Float {return Foundation.nextafter(self, b)}
 
   @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_float(a, n) }
-  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_float(a, n) }
-  @inlinable public static func sumfabs(_ a:PtrT, _ n:Int32)->Element { return smSum_fabs_float(a, n) }
+  @inlinable public static func sumabs(_ a:PtrT, _ n:Int32)->Element { return smSum_abs_float(a, n) }
   @inlinable public static func sumsqrt(_ a:PtrT, _ n:Int32)->Element { return smSum_sqrt_float(a, n) }
   @inlinable public static func sumacos(_ a:PtrT, _ n:Int32)->Element { return smSum_acos_float(a, n) }
   @inlinable public static func sumacosh(_ a:PtrT, _ n:Int32)->Element { return smSum_acosh_float(a, n) }
@@ -190,6 +184,7 @@ extension Float : SupportsBasicMath {
   @inlinable public static func sumtan(_ a:PtrT, _ n:Int32)->Element { return smSum_tan_float(a, n) }
   @inlinable public static func sumtanh(_ a:PtrT, _ n:Int32)->Element { return smSum_tanh_float(a, n) }
   @inlinable public static func sumtgamma(_ a:PtrT, _ n:Int32)->Element { return smSum_tgamma_float(a, n) }
+  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_float(a, n) }
 
   public static func ^^(x:Float, a:Float) -> Float { return x.pow(a) }
 }
@@ -250,8 +245,7 @@ extension Double : SupportsBasicMath {
   @inlinable public func nextafter(_ b: Double) -> Double {return Foundation.nextafter(self, b)}
 
   @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_double(a, n) }
-  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_double(a, n) }
-  @inlinable public static func sumfabs(_ a:PtrT, _ n:Int32)->Element { return smSum_fabs_double(a, n) }
+  @inlinable public static func sumabs(_ a:PtrT, _ n:Int32)->Element { return smSum_abs_double(a, n) }
   @inlinable public static func sumsqrt(_ a:PtrT, _ n:Int32)->Element { return smSum_sqrt_double(a, n) }
   @inlinable public static func sumacos(_ a:PtrT, _ n:Int32)->Element { return smSum_acos_double(a, n) }
   @inlinable public static func sumacosh(_ a:PtrT, _ n:Int32)->Element { return smSum_acosh_double(a, n) }
@@ -279,6 +273,7 @@ extension Double : SupportsBasicMath {
   @inlinable public static func sumtan(_ a:PtrT, _ n:Int32)->Element { return smSum_tan_double(a, n) }
   @inlinable public static func sumtanh(_ a:PtrT, _ n:Int32)->Element { return smSum_tanh_double(a, n) }
   @inlinable public static func sumtgamma(_ a:PtrT, _ n:Int32)->Element { return smSum_tgamma_double(a, n) }
+  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_double(a, n) }
 
   public static func ^^(x:Double, a:Double) -> Double { return x.pow(a) }
 }

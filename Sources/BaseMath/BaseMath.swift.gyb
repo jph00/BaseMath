@@ -3,13 +3,8 @@ import CBaseMath
 
 %{ import sys; sys.path.append('../..'); from mathfuncs import * }%
 
-extension SupportsBasicMath {
-  public func string(_ digits:Int) -> String {
-    let fmt = NumberFormatter()
-    fmt.minimumFractionDigits = digits
-    fmt.maximumFractionDigits = digits
-    return fmt.string(from: self.nsNumber) ?? "\(self)"
-  }
+extension BinaryFloatingPoint where Self: CVarArg {
+  public func string(_ digits:Int) -> String { return String(format: "%.\(digits)f", self) }
 }
 
 precedencegroup ExponentiationPrecedence { associativity: right higherThan: MultiplicationPrecedence }
@@ -35,9 +30,10 @@ public protocol SupportsBasicMath:BinaryFloatingPoint {
   func sqr() -> Self
   func abs() -> Self
   static func sum(_ a:PtrT, _ n:Int32) -> Element
-  % for f in unarycfs:
+  % for f in unaryfs:
   static func sum${f}(_ a:PtrT, _ n:Int32)->Element
   % end
+  static func sumsqr(_ a:PtrT, _ n:Int32)->Element
 
   static func ^^(x:Self, a:Self) -> Self
 }
@@ -70,9 +66,10 @@ extension ${t} : SupportsBasicMath {
   % end # f
 
   @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_${t.lower()}(a, n) }
-  % for f in unarycfs:
+  % for f in unaryfs:
   @inlinable public static func sum${f}(_ a:PtrT, _ n:Int32)->Element { return smSum_${f}_${t.lower()}(a, n) }
   % end
+  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_${t.lower()}(a, n) }
 
   public static func ^^(x:${t}, a:${t}) -> ${t} { return x.pow(a) }
 }

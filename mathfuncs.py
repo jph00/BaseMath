@@ -9,7 +9,6 @@ ctypes = ['float','double']
 
 op_fs = 'add sub mul div'.split()
 ops = '+-*/'
-unaryfs =  ['sqr', 'abs' ]+funcs2
-unarycfs = ['sqr', 'fabs']+funcs2
+unaryfs =  ['abs' ]+funcs2
 binfs = op_fs+['subRev','divRev']+funcs1+funcs3
 

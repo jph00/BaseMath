@@ -12,22 +12,7 @@ extension SupportsBasicMath {
 % end
 }
 
-public protocol BaseVector: RandomAccessCollection, MutableCollection, ExpressibleByArrayLiteral, Equatable
-  where Index==Int, Element:SupportsBasicMath {
-  typealias PtrT = UnsafePointer<Element>
-  typealias MutPtrT = UnsafeMutablePointer<Element>
-
-  init(_ data:Array<Element>)
-  init(_ count:Int)
-
-  func new(_ size:Int)->Self
-  func copy()->Self
-  var p:MutPtrT {get}
-
-  typealias UnaryF = (Element)->(Element)
-  typealias BinaryF = (Element,Element)->(Element)
-  typealias TernaryF = (Element,Element,Element)->(Element)
-
+public protocol FloatVector: BaseVector where Element:SupportsBasicMath {
   func map(_ f:UnaryF, _ dest: Self)
   func map(_ f:BinaryF, _ b:Self, _ dest: Self)
   func map(_ f:TernaryF, _ b:Self, _ c:Self, _ dest: Self)
@@ -46,29 +31,21 @@ public protocol BaseVector: RandomAccessCollection, MutableCollection, Expressib
   func ${f}_()
 % end # f
 
-% for f in unarycfs:
+% for f in unaryfs:
   func sum${f}()->Element
 % end # f
 
   func sum() -> Element
 }
 
-extension BaseVector {
-  public init(arrayLiteral data: Element...) { self.init(data) }
-  public var indices: Range<Int> { return 0..<endIndex }
-  public var startIndex: Int { return 0 }
-
-  @usableFromInline var storeKey:String { get { return "BaseVector\(Element.self)" } }
+extension FloatVector {
+  @usableFromInline var storeKey:String { get { return "FloatVector\(Element.self)" } }
   @usableFromInline var tempStore:Self { get {
     if let r = Thread.current.threadDictionary[storeKey] as? Self {
       if (r.count == count) { return r }
     }
     return Thread.setToTLS(Self(count), storeKey)
   }}
-
-  @inlinable public func new(_ size:Int)->Self { return .init(size) }
-  @inlinable public func new()  -> Self { return new(count) }
-  @inlinable public var c:Int32 {get {return numericCast(count)}}
 
   @inlinable public func sum(_ f:UnaryF)->Element {
     self.map(f, tempStore)
@@ -83,7 +60,7 @@ extension BaseVector {
     return tempStore.sum()
   }
 
-  @inlinable public func map<T:BaseVector>(_ f:UnaryF, _ dest:T) where Self.Element==T.Element {
+  @inlinable public func map<T:FloatVector>(_ f:UnaryF, _ dest:T) where Self.Element==T.Element {
     let pSrc = p; let pDest = dest.p; let n = count
     for i in 0..<n {pDest[i] = f(pSrc[i])}
   }
@@ -96,10 +73,6 @@ extension BaseVector {
     for i in 0..<n {pDest[i] = f(pSrc[i], pB[i], pC[i])}
   }
 
-  @inlinable public static func ==(lhs:Self, rhs:Self) -> Bool { return lhs.elementsEqual(rhs) }
-  @inlinable public static func ==(lhs:Array<Element>, rhs:Self) -> Bool { return self.init(lhs) == rhs }
-  @inlinable public static func ==(lhs:Self, rhs:Array<Element>) -> Bool { return lhs == self.init(rhs) }
-
   @inlinable public func new_call(_ f:(Self)         ->()              )->Self { let res = new(); f(      res); return res }
   @inlinable public func new_call(_ f:(Self, Self)   ->(), _ b:Self    )->Self { let res = new(); f(b,    res); return res }
   @inlinable public func new_call<T>(_ f:(T, Self)   ->(), _ b:T       )->Self { let res = new(); f(b,    res); return res }
@@ -109,9 +82,10 @@ extension BaseVector {
 
   @inlinable public func sum() -> Element { return Element.sum(p, numericCast(c)) }
 
-% for f in unarycfs:
+% for f in unaryfs:
   @inlinable public func sum${f}()->Element { return Element.sum${f}(p, numericCast(c)) }
 % end # f
+  @inlinable public func sumsqr()->Element { return Element.sumsqr(p, numericCast(c)) }
 
 % for f in binfs:
   % for t in 'Self','Element':

@@ -3,7 +3,6 @@
 extern "C" {
 #endif
 
-#include <tgmath.h>
 #include <stdbool.h>
 
 typedef struct RandGenC RandGenC;
@@ -177,11 +176,9 @@ void discrete_distribution_long_destroy(discrete_distribution_longC* v) ;
 long discrete_distribution_long_call(discrete_distribution_longC* p, RandGenC* g) ;
 void sm_add_float(const float* __restrict__ pSrc, const float val, float* __restrict__ pDst, const int len) ;
 float smSum_float(const float* __restrict__ pSrc, const int len) ;
-float sqrf(const float a) ;
 float smSum_sqr_float(const float* __restrict__ pSrc, const int len) ;
-void sm_sqr_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) ;
-float smSum_fabs_float(const float* __restrict__ pSrc, const int len) ;
-void sm_fabs_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) ;
+float smSum_abs_float(const float* __restrict__ pSrc, const int len) ;
+void sm_abs_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) ;
 float smSum_sqrt_float(const float* __restrict__ pSrc, const int len) ;
 void sm_sqrt_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) ;
 float smSum_acos_float(const float* __restrict__ pSrc, const int len) ;
@@ -238,11 +235,9 @@ float smSum_tgamma_float(const float* __restrict__ pSrc, const int len) ;
 void sm_tgamma_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) ;
 void sm_add_double(const double* __restrict__ pSrc, const double val, double* __restrict__ pDst, const int len) ;
 double smSum_double(const double* __restrict__ pSrc, const int len) ;
-double sqr(const double a) ;
 double smSum_sqr_double(const double* __restrict__ pSrc, const int len) ;
-void sm_sqr_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) ;
-double smSum_fabs_double(const double* __restrict__ pSrc, const int len) ;
-void sm_fabs_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) ;
+double smSum_abs_double(const double* __restrict__ pSrc, const int len) ;
+void sm_abs_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) ;
 double smSum_sqrt_double(const double* __restrict__ pSrc, const int len) ;
 void sm_sqrt_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) ;
 double smSum_acos_double(const double* __restrict__ pSrc, const int len) ;

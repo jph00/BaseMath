@@ -1,7 +1,9 @@
 #include "include/CBaseMath.h"
-#include <random>
 
 %{ import sys; sys.path.append('../..'); from mathfuncs import * }%
+
+#include <random>
+#include <cmath>
 
 using namespace std; 
 
@@ -65,21 +67,27 @@ ${t} smSum_${t}(const ${t}* __restrict__ pSrc, const int len) {
   return r;
 }
 
-${t} sqr${s}(const ${t} a) {return a*a;}
+${t} smSum_sqr_${t}(const ${t}* __restrict__ pSrc, const int len) {
+  ${t} r = 0;
+  #pragma ivdep
+  #pragma clang loop interleave_count(8)
+  for (int i=0; i<len; ++i) { r += pSrc[i]*pSrc[i]; }
+  return r;
+}
 
-  % for f in unarycfs:
+  % for f in unaryfs:
 ${t} smSum_${f}_${t}(const ${t}* __restrict__ pSrc, const int len) {
   ${t} r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
-  for (int i=0; i<len; ++i) { r += ${f}${s}(pSrc[i]); }
+  for (int i=0; i<len; ++i) { r += ${f}(pSrc[i]); }
   return r;
 }
 
 void sm_${f}_${t}(const ${t}* __restrict__ pSrc, ${t}* __restrict__ pDst, const int len) {
   #pragma ivdep
   #pragma clang loop interleave_count(8)
-  for (int i=0; i<len; ++i) { pDst[i] = ${f}${s}(pSrc[i]); }
+  for (int i=0; i<len; ++i) { pDst[i] = ${f}(pSrc[i]); }
 }
   % end # f
 
