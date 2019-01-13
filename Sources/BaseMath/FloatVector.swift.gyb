@@ -13,10 +13,6 @@ extension SupportsBasicMath {
 }
 
 public protocol FloatVector: BaseVector where Element:SupportsBasicMath {
-  func map(_ f:UnaryF, _ dest: Self)
-  func map(_ f:BinaryF, _ b:Self, _ dest: Self)
-  func map(_ f:TernaryF, _ b:Self, _ c:Self, _ dest: Self)
-
   func sum(_ f:UnaryF)->Element
   func sum(_ f:BinaryF, _ b:Self)->Element
   func sum(_ f:TernaryF, _ b:Self, _ c:Self)->Element
@@ -58,19 +54,6 @@ extension FloatVector {
   @inlinable public func sum(_ f:TernaryF, _ b:Self, _ c:Self)->Element {
     self.map(f, b, c, tempStore)
     return tempStore.sum()
-  }
-
-  @inlinable public func map<T:FloatVector>(_ f:UnaryF, _ dest:T) where Self.Element==T.Element {
-    let pSrc = p; let pDest = dest.p; let n = count
-    for i in 0..<n {pDest[i] = f(pSrc[i])}
-  }
-  @inlinable public func map(_ f:BinaryF, _ b:Self, _ dest: Self) {
-    let pSrc = p; let pB = b.p; let pDest = dest.p; let n = count
-    for i in 0..<n {pDest[i] = f(pSrc[i], pB[i])}
-  }
-  @inlinable public func map(_ f:TernaryF, _ b:Self, _ c:Self, _ dest: Self) {
-    let pSrc = p; let pB = b.p; let pC = c.p; let pDest = dest.p; let n = count
-    for i in 0..<n {pDest[i] = f(pSrc[i], pB[i], pC[i])}
   }
 
   @inlinable public func new_call(_ f:(Self)         ->()              )->Self { let res = new(); f(      res); return res }

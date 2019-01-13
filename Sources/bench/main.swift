@@ -2,9 +2,6 @@ import Foundation
 import CBaseMath
 import BaseMath
 
-print(AlignedStorage<Int>([1,2,3]))
-print("========")
-
 let dist01 = Int.uniform_int_distribution(1,6);       print(dist01[])
 let dist02 = Int32.uniform_int_distribution(10,60);   print(dist02[])
 let dist03 = Float.uniform_real_distribution(0,1);    print(dist03[])

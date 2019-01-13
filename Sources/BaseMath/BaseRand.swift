@@ -21,31 +21,23 @@ extension Int:Initable {}
 extension Int32:Initable {}
 extension Bool:Initable {}
 
-public protocol Distribution {
-  associatedtype Element:SignedNumeric
+public protocol Distribution:Nullary {
   subscript()->Element {get}
   subscript(n:Int)->[Element] {get}
-  func fill<T:BaseVector>(_ v: inout T) where T.Element==Element;
   func gen_array(_ n:Int)->[Element]
   func gen_aligned(_ n:Int)->AlignedStorage<Element>
   func gen_pointer(_ n:Int)->UnsafeMutableBufferPointer<Element>
 }
 extension Distribution {
   public subscript(n:Int)->[Element] { return gen_array(n) }
-  public func fill<T:BaseVector>(_ v: inout T)  where T.Element==Element {
-    for i in 0..<v.count { v[i] = self[] }
-  }
   public func gen_array(_ n:Int)->[Element] {
-    var res = Array<Element>(n)
-    fill(&res); return res
+    return [Element].fill(self, n)
   }
   public func gen_aligned(_ n:Int)->AlignedStorage<Element> {
-    var res = AlignedStorage<Element>(n)
-    fill(&res); return res
+    return AlignedStorage<Element>.fill(self, n)
   }
   public func gen_pointer(_ n:Int)->UnsafeMutableBufferPointer<Element> {
-    var res = UnsafeMutableBufferPointer<Element>(n)
-    fill(&res); return res
+    return UnsafeMutableBufferPointer<Element>.fill(self, n)
   }
 }
 
@@ -414,28 +406,28 @@ extension Double {
 public class discrete_distribution_Int:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ d_s:Array<Double>) { ptr=discrete_distribution_long_create(d_s.p, d_s.p+d_s.count); g=g_; }
-  public convenience init(_ d_s:Array<Double>) { self.init(RandGen.stored, d_s) }
+  public init(_ g_:RandGen, _ d_s:[Double]) { ptr=discrete_distribution_long_create(d_s.p, d_s.p+d_s.count); g=g_; }
+  public convenience init(_ d_s:[Double]) { self.init(RandGen.stored, d_s) }
   deinit { discrete_distribution_long_destroy(ptr) }
   @inlinable public subscript()->Int { return discrete_distribution_long_call(ptr, g.ptr) }
 }
 extension Int {
-  public static func discrete_distribution(_ g_:RandGen, _ d_s:Array<Double>)->discrete_distribution_Int {return discrete_distribution_Int(g_, d_s)}
-  public static func discrete_distribution(_ d_s:Array<Double>)->discrete_distribution_Int {return discrete_distribution_Int(d_s)}
+  public static func discrete_distribution(_ g_:RandGen, _ d_s:[Double])->discrete_distribution_Int {return discrete_distribution_Int(g_, d_s)}
+  public static func discrete_distribution(_ d_s:[Double])->discrete_distribution_Int {return discrete_distribution_Int(d_s)}
 }
 
 
 public class discrete_distribution_Int32:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ d_s:Array<Double>) { ptr=discrete_distribution_int_create(d_s.p, d_s.p+d_s.count); g=g_; }
-  public convenience init(_ d_s:Array<Double>) { self.init(RandGen.stored, d_s) }
+  public init(_ g_:RandGen, _ d_s:[Double]) { ptr=discrete_distribution_int_create(d_s.p, d_s.p+d_s.count); g=g_; }
+  public convenience init(_ d_s:[Double]) { self.init(RandGen.stored, d_s) }
   deinit { discrete_distribution_int_destroy(ptr) }
   @inlinable public subscript()->Int32 { return discrete_distribution_int_call(ptr, g.ptr) }
 }
 extension Int32 {
-  public static func discrete_distribution(_ g_:RandGen, _ d_s:Array<Double>)->discrete_distribution_Int32 {return discrete_distribution_Int32(g_, d_s)}
-  public static func discrete_distribution(_ d_s:Array<Double>)->discrete_distribution_Int32 {return discrete_distribution_Int32(d_s)}
+  public static func discrete_distribution(_ g_:RandGen, _ d_s:[Double])->discrete_distribution_Int32 {return discrete_distribution_Int32(g_, d_s)}
+  public static func discrete_distribution(_ d_s:[Double])->discrete_distribution_Int32 {return discrete_distribution_Int32(d_s)}
 }
 
 
@@ -443,56 +435,56 @@ extension Int32 {
 public class piecewise_constant_distribution_Float:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>) { ptr=piecewise_constant_distribution_float_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
-  public convenience init(_ i_s:Array<Double>, _ w_s:Array<Double>) { self.init(RandGen.stored, i_s, w_s) }
+  public init(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double]) { ptr=piecewise_constant_distribution_float_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
+  public convenience init(_ i_s:[Double], _ w_s:[Double]) { self.init(RandGen.stored, i_s, w_s) }
   deinit { piecewise_constant_distribution_float_destroy(ptr) }
   @inlinable public subscript()->Float { return piecewise_constant_distribution_float_call(ptr, g.ptr) }
 }
 extension Float {
-  public static func piecewise_constant_distribution(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_constant_distribution_Float {return piecewise_constant_distribution_Float(g_, i_s, w_s)}
-  public static func piecewise_constant_distribution(_ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_constant_distribution_Float {return piecewise_constant_distribution_Float(i_s, w_s)}
+  public static func piecewise_constant_distribution(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double])->piecewise_constant_distribution_Float {return piecewise_constant_distribution_Float(g_, i_s, w_s)}
+  public static func piecewise_constant_distribution(_ i_s:[Double], _ w_s:[Double])->piecewise_constant_distribution_Float {return piecewise_constant_distribution_Float(i_s, w_s)}
 }
 
 
 public class piecewise_constant_distribution_Double:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>) { ptr=piecewise_constant_distribution_double_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
-  public convenience init(_ i_s:Array<Double>, _ w_s:Array<Double>) { self.init(RandGen.stored, i_s, w_s) }
+  public init(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double]) { ptr=piecewise_constant_distribution_double_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
+  public convenience init(_ i_s:[Double], _ w_s:[Double]) { self.init(RandGen.stored, i_s, w_s) }
   deinit { piecewise_constant_distribution_double_destroy(ptr) }
   @inlinable public subscript()->Double { return piecewise_constant_distribution_double_call(ptr, g.ptr) }
 }
 extension Double {
-  public static func piecewise_constant_distribution(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_constant_distribution_Double {return piecewise_constant_distribution_Double(g_, i_s, w_s)}
-  public static func piecewise_constant_distribution(_ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_constant_distribution_Double {return piecewise_constant_distribution_Double(i_s, w_s)}
+  public static func piecewise_constant_distribution(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double])->piecewise_constant_distribution_Double {return piecewise_constant_distribution_Double(g_, i_s, w_s)}
+  public static func piecewise_constant_distribution(_ i_s:[Double], _ w_s:[Double])->piecewise_constant_distribution_Double {return piecewise_constant_distribution_Double(i_s, w_s)}
 }
 
 
 public class piecewise_linear_distribution_Float:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>) { ptr=piecewise_linear_distribution_float_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
-  public convenience init(_ i_s:Array<Double>, _ w_s:Array<Double>) { self.init(RandGen.stored, i_s, w_s) }
+  public init(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double]) { ptr=piecewise_linear_distribution_float_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
+  public convenience init(_ i_s:[Double], _ w_s:[Double]) { self.init(RandGen.stored, i_s, w_s) }
   deinit { piecewise_linear_distribution_float_destroy(ptr) }
   @inlinable public subscript()->Float { return piecewise_linear_distribution_float_call(ptr, g.ptr) }
 }
 extension Float {
-  public static func piecewise_linear_distribution(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_linear_distribution_Float {return piecewise_linear_distribution_Float(g_, i_s, w_s)}
-  public static func piecewise_linear_distribution(_ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_linear_distribution_Float {return piecewise_linear_distribution_Float(i_s, w_s)}
+  public static func piecewise_linear_distribution(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double])->piecewise_linear_distribution_Float {return piecewise_linear_distribution_Float(g_, i_s, w_s)}
+  public static func piecewise_linear_distribution(_ i_s:[Double], _ w_s:[Double])->piecewise_linear_distribution_Float {return piecewise_linear_distribution_Float(i_s, w_s)}
 }
 
 
 public class piecewise_linear_distribution_Double:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>) { ptr=piecewise_linear_distribution_double_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
-  public convenience init(_ i_s:Array<Double>, _ w_s:Array<Double>) { self.init(RandGen.stored, i_s, w_s) }
+  public init(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double]) { ptr=piecewise_linear_distribution_double_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
+  public convenience init(_ i_s:[Double], _ w_s:[Double]) { self.init(RandGen.stored, i_s, w_s) }
   deinit { piecewise_linear_distribution_double_destroy(ptr) }
   @inlinable public subscript()->Double { return piecewise_linear_distribution_double_call(ptr, g.ptr) }
 }
 extension Double {
-  public static func piecewise_linear_distribution(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_linear_distribution_Double {return piecewise_linear_distribution_Double(g_, i_s, w_s)}
-  public static func piecewise_linear_distribution(_ i_s:Array<Double>, _ w_s:Array<Double>)->piecewise_linear_distribution_Double {return piecewise_linear_distribution_Double(i_s, w_s)}
+  public static func piecewise_linear_distribution(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double])->piecewise_linear_distribution_Double {return piecewise_linear_distribution_Double(g_, i_s, w_s)}
+  public static func piecewise_linear_distribution(_ i_s:[Double], _ w_s:[Double])->piecewise_linear_distribution_Double {return piecewise_linear_distribution_Double(i_s, w_s)}
 }
 
 
