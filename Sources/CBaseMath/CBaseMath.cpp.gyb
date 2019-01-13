@@ -21,6 +21,7 @@ int_types = [
   ['negative_binomial_distribution', '# k, double p', 'k,p'],
   ['geometric_distribution', 'double p', 'p'], 
   ['poisson_distribution', 'double mean', 'mean'], 
+  ['discrete_distribution', 'double* start, double* end','start,end'],
 ]
 real_types = [
   ['uniform_real_distribution', '# a,# b', 'a,b'],
@@ -33,6 +34,8 @@ real_types = [
   ['cauchy_distribution', '# a,# b', 'a,b'],
   ['fisher_f_distribution', '# m,# n', 'm,n'],
   ['student_t_distribution', '# n', 'n'],
+  ['piecewise_constant_distribution', 'double* start_i, double* end_i, double* start_w','start_i,end_i,start_w'],
+  ['piecewise_linear_distribution', 'double* start_i, double* end_i, double* start_w','start_i,end_i,start_w'],
 ]
 bool_types = [
   ['bernoulli_distribution', 'double p', 'p'],
@@ -40,7 +43,6 @@ bool_types = [
 types  = [(n,t,p1.replace('#',t),p2) for n,p1,p2 in int_types  for t in ['int','long']]
 types += [(n,t,p1.replace('#',t),p2) for n,p1,p2 in real_types for t in ['float','double']]
 types += [(n,'bool',p1,p2) for n,p1,p2 in bool_types]
-types += [('discrete_distribution',t,'double* start, double* end','start,end') for t in ['int','long']]
 }%
 
 % for n,t,p1,p2 in types:

@@ -85,6 +85,20 @@ void poisson_distribution_long_destroy(poisson_distribution_longC* v) { delete(v
 long poisson_distribution_long_call(poisson_distribution_longC* p, RandGenC* g) {return (*p)(*g);}
 
 
+struct discrete_distribution_intC:discrete_distribution<int> {};
+typedef struct discrete_distribution_intC discrete_distribution_intC;
+discrete_distribution_intC* discrete_distribution_int_create(double* start, double* end) { return (discrete_distribution_intC*)(new discrete_distribution<int>(start,end)); }
+void discrete_distribution_int_destroy(discrete_distribution_intC* v) { delete(v); }
+int discrete_distribution_int_call(discrete_distribution_intC* p, RandGenC* g) {return (*p)(*g);}
+
+
+struct discrete_distribution_longC:discrete_distribution<long> {};
+typedef struct discrete_distribution_longC discrete_distribution_longC;
+discrete_distribution_longC* discrete_distribution_long_create(double* start, double* end) { return (discrete_distribution_longC*)(new discrete_distribution<long>(start,end)); }
+void discrete_distribution_long_destroy(discrete_distribution_longC* v) { delete(v); }
+long discrete_distribution_long_call(discrete_distribution_longC* p, RandGenC* g) {return (*p)(*g);}
+
+
 struct uniform_real_distribution_floatC:uniform_real_distribution<float> {};
 typedef struct uniform_real_distribution_floatC uniform_real_distribution_floatC;
 uniform_real_distribution_floatC* uniform_real_distribution_float_create(float a,float b) { return (uniform_real_distribution_floatC*)(new uniform_real_distribution<float>(a,b)); }
@@ -225,25 +239,39 @@ void student_t_distribution_double_destroy(student_t_distribution_doubleC* v) { 
 double student_t_distribution_double_call(student_t_distribution_doubleC* p, RandGenC* g) {return (*p)(*g);}
 
 
+struct piecewise_constant_distribution_floatC:piecewise_constant_distribution<float> {};
+typedef struct piecewise_constant_distribution_floatC piecewise_constant_distribution_floatC;
+piecewise_constant_distribution_floatC* piecewise_constant_distribution_float_create(double* start_i, double* end_i, double* start_w) { return (piecewise_constant_distribution_floatC*)(new piecewise_constant_distribution<float>(start_i,end_i,start_w)); }
+void piecewise_constant_distribution_float_destroy(piecewise_constant_distribution_floatC* v) { delete(v); }
+float piecewise_constant_distribution_float_call(piecewise_constant_distribution_floatC* p, RandGenC* g) {return (*p)(*g);}
+
+
+struct piecewise_constant_distribution_doubleC:piecewise_constant_distribution<double> {};
+typedef struct piecewise_constant_distribution_doubleC piecewise_constant_distribution_doubleC;
+piecewise_constant_distribution_doubleC* piecewise_constant_distribution_double_create(double* start_i, double* end_i, double* start_w) { return (piecewise_constant_distribution_doubleC*)(new piecewise_constant_distribution<double>(start_i,end_i,start_w)); }
+void piecewise_constant_distribution_double_destroy(piecewise_constant_distribution_doubleC* v) { delete(v); }
+double piecewise_constant_distribution_double_call(piecewise_constant_distribution_doubleC* p, RandGenC* g) {return (*p)(*g);}
+
+
+struct piecewise_linear_distribution_floatC:piecewise_linear_distribution<float> {};
+typedef struct piecewise_linear_distribution_floatC piecewise_linear_distribution_floatC;
+piecewise_linear_distribution_floatC* piecewise_linear_distribution_float_create(double* start_i, double* end_i, double* start_w) { return (piecewise_linear_distribution_floatC*)(new piecewise_linear_distribution<float>(start_i,end_i,start_w)); }
+void piecewise_linear_distribution_float_destroy(piecewise_linear_distribution_floatC* v) { delete(v); }
+float piecewise_linear_distribution_float_call(piecewise_linear_distribution_floatC* p, RandGenC* g) {return (*p)(*g);}
+
+
+struct piecewise_linear_distribution_doubleC:piecewise_linear_distribution<double> {};
+typedef struct piecewise_linear_distribution_doubleC piecewise_linear_distribution_doubleC;
+piecewise_linear_distribution_doubleC* piecewise_linear_distribution_double_create(double* start_i, double* end_i, double* start_w) { return (piecewise_linear_distribution_doubleC*)(new piecewise_linear_distribution<double>(start_i,end_i,start_w)); }
+void piecewise_linear_distribution_double_destroy(piecewise_linear_distribution_doubleC* v) { delete(v); }
+double piecewise_linear_distribution_double_call(piecewise_linear_distribution_doubleC* p, RandGenC* g) {return (*p)(*g);}
+
+
 struct bernoulli_distribution_boolC:bernoulli_distribution {};
 typedef struct bernoulli_distribution_boolC bernoulli_distribution_boolC;
 bernoulli_distribution_boolC* bernoulli_distribution_bool_create(double p) { return (bernoulli_distribution_boolC*)(new bernoulli_distribution(p)); }
 void bernoulli_distribution_bool_destroy(bernoulli_distribution_boolC* v) { delete(v); }
 bool bernoulli_distribution_bool_call(bernoulli_distribution_boolC* p, RandGenC* g) {return (*p)(*g);}
-
-
-struct discrete_distribution_intC:discrete_distribution<int> {};
-typedef struct discrete_distribution_intC discrete_distribution_intC;
-discrete_distribution_intC* discrete_distribution_int_create(double* start, double* end) { return (discrete_distribution_intC*)(new discrete_distribution<int>(start,end)); }
-void discrete_distribution_int_destroy(discrete_distribution_intC* v) { delete(v); }
-int discrete_distribution_int_call(discrete_distribution_intC* p, RandGenC* g) {return (*p)(*g);}
-
-
-struct discrete_distribution_longC:discrete_distribution<long> {};
-typedef struct discrete_distribution_longC discrete_distribution_longC;
-discrete_distribution_longC* discrete_distribution_long_create(double* start, double* end) { return (discrete_distribution_longC*)(new discrete_distribution<long>(start,end)); }
-void discrete_distribution_long_destroy(discrete_distribution_longC* v) { delete(v); }
-long discrete_distribution_long_call(discrete_distribution_longC* p, RandGenC* g) {return (*p)(*g);}
 
 
 

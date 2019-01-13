@@ -1,6 +1,7 @@
 import Foundation
 
-public protocol BaseVector: RandomAccessCollection, MutableCollection, ExpressibleByArrayLiteral, Equatable
+public protocol BaseVector:
+    RandomAccessCollection, MutableCollection, ExpressibleByArrayLiteral, Equatable, CustomStringConvertible
   where Index==Int, Element:SignedNumeric {
   typealias PtrT = UnsafePointer<Element>
   typealias MutPtrT = UnsafeMutablePointer<Element>
@@ -28,5 +29,7 @@ extension BaseVector {
   @inlinable public static func ==(lhs:Self, rhs:Self) -> Bool { return lhs.elementsEqual(rhs) }
   @inlinable public static func ==(lhs:Array<Element>, rhs:Self) -> Bool { return self.init(lhs) == rhs }
   @inlinable public static func ==(lhs:Self, rhs:Array<Element>) -> Bool { return lhs == self.init(rhs) }
+
+  public var description: String { return "\(Array(self))" }
 }
 

@@ -1,9 +1,16 @@
+import Foundation
 import CBaseMath
 
 public class RandGen {
   public let ptr:OpaquePointer?
   public init() { ptr=RandGen_create() }
   deinit { RandGen_destroy(ptr) }
+
+  @usableFromInline static var storeKey:String { get { return "RandGen" } }
+  @usableFromInline static var stored:RandGen { get {
+    if let r = Thread.current.threadDictionary[storeKey] as? RandGen { return r }
+    return Thread.setToTLS(RandGen(), storeKey)
+  }}
 }
 
 %{
@@ -27,48 +34,93 @@ real_types = [
   ['student_t_distribution', '_ n:#', 'n'],
 ]
 bool_types = [
-  ['bernoulli_distribution', '_ p:Double', 'p'],
+  #['bernoulli_distribution', '_ p:Double', 'p'],
 ]
 types  = [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in int_types  for t1,t2 in [['Int32','int'],['Int','long']]]
 types += [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in real_types for t1,t2 in [['Float','float'],['Double','double']]]
 types += [(n,'Bool','bool',p1,p2) for n,p1,p2 in bool_types]
 }%
 
+public protocol Initable { init() }
+% for t in "Float Double Int Int32 Bool".split():
+extension ${t}:Initable {}
+% end
+
 public protocol Distribution {
-  associatedtype Element
+  associatedtype Element:SignedNumeric
   subscript()->Element {get}
-  func gen()->Element
+  subscript(n:Int)->[Element] {get}
+  func fill<T:BaseVector>(_ v: inout T) where T.Element==Element;
+  func gen_array(_ n:Int)->[Element]
+  func gen_aligned(_ n:Int)->AlignedStorage<Element>
+  func gen_pointer(_ n:Int)->UnsafeMutableBufferPointer<Element>
+}
+extension Distribution {
+  public subscript(n:Int)->[Element] { return gen_array(n) }
+  public func fill<T:BaseVector>(_ v: inout T)  where T.Element==Element {
+    for i in 0..<v.count { v[i] = self[] }
+  }
+  public func gen_array(_ n:Int)->[Element] {
+    var res = Array<Element>(n)
+    fill(&res); return res
+  }
+  public func gen_aligned(_ n:Int)->AlignedStorage<Element> {
+    var res = AlignedStorage<Element>(n)
+    fill(&res); return res
+  }
+  public func gen_pointer(_ n:Int)->UnsafeMutableBufferPointer<Element> {
+    var res = UnsafeMutableBufferPointer<Element>(n)
+    fill(&res); return res
+  }
 }
 
 % for n,t1,t2,p1,p2 in types:
-public class ${n}_${t1}:Distribution {
+public final class ${n}_${t1}:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
   public init(_ g_:RandGen, ${p1}) { ptr=${n}_${t2}_create(${p2}); g=g_ }
+  public convenience init(${p1}) { self.init(RandGen.stored, ${p2}) }
   deinit { ${n}_${t2}_destroy(ptr) }
-  @inlinable public subscript ()->${t1} { return gen() }
-  @inlinable public func gen()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+  @inlinable public subscript()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
 }
 extension ${t1} {
   public static func ${n}(_ g_:RandGen, ${p1})->${n}_${t1} {return ${n}_${t1}(g_, ${p2})}
+  public static func ${n}(${p1})->${n}_${t1} {return ${n}_${t1}(${p2})}
 }
 % end
 
-% for n in ['discrete_distribution']:
-  % for t1,t2 in [['Int', 'long'], ['Int32', 'int']]:
+%{ n = 'discrete_distribution' }%
+% for t1,t2 in [['Int', 'long'], ['Int32', 'int']]:
 
-public class ${n}_${t1} {
+public class ${n}_${t1}:Distribution {
   public let ptr:OpaquePointer?
   @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ ds:Array<Double>) {
-    g=g_; ptr=${n}_${t2}_create(ds.p, ds.p+ds.count);
-  }
+  public init(_ g_:RandGen, _ d_s:Array<Double>) { ptr=${n}_${t2}_create(d_s.p, d_s.p+d_s.count); g=g_; }
+  public convenience init(_ d_s:Array<Double>) { self.init(RandGen.stored, d_s) }
   deinit { ${n}_${t2}_destroy(ptr) }
-  @inlinable public subscript ()->${t1} { return gen() } 
-  @inlinable public func gen()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+  @inlinable public subscript()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
 }
 extension ${t1} {
-  public static func ${n}(_ g_:RandGen, _ ds:Array<Double>)->${n}_${t1} {return ${n}_${t1}(g_, ds)}
+  public static func ${n}(_ g_:RandGen, _ d_s:Array<Double>)->${n}_${t1} {return ${n}_${t1}(g_, d_s)}
+  public static func ${n}(_ d_s:Array<Double>)->${n}_${t1} {return ${n}_${t1}(d_s)}
+}
+
+% end
+
+% for n in ['piecewise_constant_distribution', 'piecewise_linear_distribution']:
+  % for t1,t2 in [['Float', 'float'], ['Double', 'double']]:
+
+public class ${n}_${t1}:Distribution {
+  public let ptr:OpaquePointer?
+  @usableFromInline let g:RandGen
+  public init(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>) { ptr=${n}_${t2}_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
+  public convenience init(_ i_s:Array<Double>, _ w_s:Array<Double>) { self.init(RandGen.stored, i_s, w_s) }
+  deinit { ${n}_${t2}_destroy(ptr) }
+  @inlinable public subscript()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+}
+extension ${t1} {
+  public static func ${n}(_ g_:RandGen, _ i_s:Array<Double>, _ w_s:Array<Double>)->${n}_${t1} {return ${n}_${t1}(g_, i_s, w_s)}
+  public static func ${n}(_ i_s:Array<Double>, _ w_s:Array<Double>)->${n}_${t1} {return ${n}_${t1}(i_s, w_s)}
 }
 
   % end

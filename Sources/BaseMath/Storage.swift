@@ -10,7 +10,7 @@ extension Array: BaseVector  where Element:SignedNumeric { }
 extension Array: FloatVector where Element:SupportsBasicMath { }
 
 public protocol ComposedStorage {
-  associatedtype Storage:MutableCollection where Storage.Index==Int
+  associatedtype Storage:MutableCollection,CustomStringConvertible where Storage.Index==Int
   typealias Index=Int
 
   var data:Storage {get set}
@@ -22,7 +22,7 @@ public extension ComposedStorage {
   var endIndex: Int { return data.count }
 }
 
-extension UnsafeMutableBufferPointer where Element:SignedNumeric {
+extension UnsafeMutableBufferPointer {
   public init(_ count:Int) {
     let sz = MemoryLayout<Element>.stride
     let raw = UnsafeMutableRawBufferPointer.allocate(byteCount: sz*count, alignment: 64)
@@ -36,17 +36,19 @@ extension UnsafeMutableBufferPointer where Element:SignedNumeric {
   public func copy()->UnsafeMutableBufferPointer { return .init(Array(self)) }
 }
 
-extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable where Element:SignedNumeric {
+extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable,CustomStringConvertible
+    where Element:SignedNumeric {
   public typealias ArrayLiteralElement=Element
 }
 extension UnsafeMutableBufferPointer: FloatVector where Element:SupportsBasicMath { }
 
-public final class AlignedStorage<Element:SignedNumeric>: BaseVector,ComposedStorage {
-  public var data:UnsafeMutableBufferPointer<Element>
+public final class AlignedStorage<T:SignedNumeric>: BaseVector,ComposedStorage {
+  public typealias Element=T
+  public var data:UnsafeMutableBufferPointer<T>
 
-  public init(_ data: UnsafeMutableBufferPointer<Element>) {self.data=data}
+  public init(_ data: UnsafeMutableBufferPointer<T>) {self.data=data}
   public convenience init(_ count:Int)      { self.init(UnsafeMutableBufferPointer(count)) }
-  public convenience init(_ array:Array<Element>) { self.init(UnsafeMutableBufferPointer(array)) }
+  public convenience init(_ array:Array<T>) { self.init(UnsafeMutableBufferPointer(array)) }
 
   deinit { UnsafeMutableRawBufferPointer(data).deallocate() }
 
@@ -54,5 +56,5 @@ public final class AlignedStorage<Element:SignedNumeric>: BaseVector,ComposedSto
   public func copy()->Self { return .init(data.copy()) }
 }
 
-extension AlignedStorage:FloatVector where Element:SupportsBasicMath {}
+extension AlignedStorage:FloatVector where T:SupportsBasicMath {}
 
