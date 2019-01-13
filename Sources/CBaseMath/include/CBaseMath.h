@@ -3,6 +3,9 @@
 extern "C" {
 #endif
 
+#include <tgmath.h>
+#include <stdbool.h>
+
 typedef struct RandGenC RandGenC;
 
 RandGenC* RandGen_create() ;
@@ -157,6 +160,21 @@ typedef struct student_t_distribution_doubleC student_t_distribution_doubleC;
 student_t_distribution_doubleC* student_t_distribution_double_create(double n) ;
 void student_t_distribution_double_destroy(student_t_distribution_doubleC* v) ;
 double student_t_distribution_double_call(student_t_distribution_doubleC* p, RandGenC* g) ;
+typedef struct bernoulli_distribution_boolC bernoulli_distribution_boolC;
+
+bernoulli_distribution_boolC* bernoulli_distribution_bool_create(double p) ;
+void bernoulli_distribution_bool_destroy(bernoulli_distribution_boolC* v) ;
+bool bernoulli_distribution_bool_call(bernoulli_distribution_boolC* p, RandGenC* g) ;
+typedef struct discrete_distribution_intC discrete_distribution_intC;
+
+discrete_distribution_intC* discrete_distribution_int_create(double* start, double* end) ;
+void discrete_distribution_int_destroy(discrete_distribution_intC* v) ;
+int discrete_distribution_int_call(discrete_distribution_intC* p, RandGenC* g) ;
+typedef struct discrete_distribution_longC discrete_distribution_longC;
+
+discrete_distribution_longC* discrete_distribution_long_create(double* start, double* end) ;
+void discrete_distribution_long_destroy(discrete_distribution_longC* v) ;
+long discrete_distribution_long_call(discrete_distribution_longC* p, RandGenC* g) ;
 void sm_add_float(const float* __restrict__ pSrc, const float val, float* __restrict__ pDst, const int len) ;
 float smSum_float(const float* __restrict__ pSrc, const int len) ;
 float sqrf(const float a) ;

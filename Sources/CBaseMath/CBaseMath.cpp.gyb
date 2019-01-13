@@ -1,5 +1,4 @@
 #include "include/CBaseMath.h"
-#include <tgmath.h>
 #include <random>
 
 %{ import sys; sys.path.append('../..'); from mathfuncs import * }%
@@ -33,12 +32,17 @@ real_types = [
   ['fisher_f_distribution', '# m,# n', 'm,n'],
   ['student_t_distribution', '# n', 'n'],
 ]
+bool_types = [
+  ['bernoulli_distribution', 'double p', 'p'],
+]
 types  = [(n,t,p1.replace('#',t),p2) for n,p1,p2 in int_types  for t in ['int','long']]
 types += [(n,t,p1.replace('#',t),p2) for n,p1,p2 in real_types for t in ['float','double']]
+types += [(n,'bool',p1,p2) for n,p1,p2 in bool_types]
+types += [('discrete_distribution',t,'double* start, double* end','start,end') for t in ['int','long']]
 }%
 
 % for n,t,p1,p2 in types:
-%{ suf = f'<{t}>' }%
+%{ suf = '' if t=='bool' else f'<{t}>' }%
 
 struct ${n}_${t}C:${n}${suf} {};
 typedef struct ${n}_${t}C ${n}_${t}C;

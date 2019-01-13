@@ -8,7 +8,7 @@ public class RandGen {
 
 
 public protocol Distribution {
-  associatedtype Element:SignedNumeric
+  associatedtype Element
   subscript()->Element {get}
   func gen()->Element
 }
@@ -343,4 +343,46 @@ public class student_t_distribution_Double:Distribution {
 extension Double {
   public static func student_t_distribution(_ g_:RandGen, _ n:Double)->student_t_distribution_Double {return student_t_distribution_Double(g_, n)}
 }
+public class bernoulli_distribution_Bool:Distribution {
+  public let ptr:OpaquePointer?
+  @usableFromInline let g:RandGen
+  public init(_ g_:RandGen, _ p:Double) { ptr=bernoulli_distribution_bool_create(p); g=g_ }
+  deinit { bernoulli_distribution_bool_destroy(ptr) }
+  @inlinable public subscript ()->Bool { return gen() }
+  @inlinable public func gen()->Bool { return bernoulli_distribution_bool_call(ptr, g.ptr) }
+}
+extension Bool {
+  public static func bernoulli_distribution(_ g_:RandGen, _ p:Double)->bernoulli_distribution_Bool {return bernoulli_distribution_Bool(g_, p)}
+}
+
+
+public class discrete_distribution_Int {
+  public let ptr:OpaquePointer?
+  @usableFromInline let g:RandGen
+  public init(_ g_:RandGen, _ ds:Array<Double>) {
+    g=g_; ptr=discrete_distribution_long_create(ds.p, ds.p+ds.count);
+  }
+  deinit { discrete_distribution_long_destroy(ptr) }
+  @inlinable public subscript ()->Int { return gen() } 
+  @inlinable public func gen()->Int { return discrete_distribution_long_call(ptr, g.ptr) }
+}
+extension Int {
+  public static func discrete_distribution(_ g_:RandGen, _ ds:Array<Double>)->discrete_distribution_Int {return discrete_distribution_Int(g_, ds)}
+}
+
+
+public class discrete_distribution_Int32 {
+  public let ptr:OpaquePointer?
+  @usableFromInline let g:RandGen
+  public init(_ g_:RandGen, _ ds:Array<Double>) {
+    g=g_; ptr=discrete_distribution_int_create(ds.p, ds.p+ds.count);
+  }
+  deinit { discrete_distribution_int_destroy(ptr) }
+  @inlinable public subscript ()->Int32 { return gen() } 
+  @inlinable public func gen()->Int32 { return discrete_distribution_int_call(ptr, g.ptr) }
+}
+extension Int32 {
+  public static func discrete_distribution(_ g_:RandGen, _ ds:Array<Double>)->discrete_distribution_Int32 {return discrete_distribution_Int32(g_, ds)}
+}
+
 

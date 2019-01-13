@@ -12,6 +12,9 @@
 extern "C" {
 #endif
 
+#include <tgmath.h>
+#include <stdbool.h>
+
 % for l in lines:
 ${l}
 % end

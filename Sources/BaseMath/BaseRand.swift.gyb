@@ -26,12 +26,16 @@ real_types = [
   ['fisher_f_distribution', '_ m:#,_ n:#', 'm,n'],
   ['student_t_distribution', '_ n:#', 'n'],
 ]
+bool_types = [
+  ['bernoulli_distribution', '_ p:Double', 'p'],
+]
 types  = [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in int_types  for t1,t2 in [['Int32','int'],['Int','long']]]
 types += [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in real_types for t1,t2 in [['Float','float'],['Double','double']]]
+types += [(n,'Bool','bool',p1,p2) for n,p1,p2 in bool_types]
 }%
 
 public protocol Distribution {
-  associatedtype Element:SignedNumeric
+  associatedtype Element
   subscript()->Element {get}
   func gen()->Element
 }
@@ -48,5 +52,25 @@ public class ${n}_${t1}:Distribution {
 extension ${t1} {
   public static func ${n}(_ g_:RandGen, ${p1})->${n}_${t1} {return ${n}_${t1}(g_, ${p2})}
 }
+% end
+
+% for n in ['discrete_distribution']:
+  % for t1,t2 in [['Int', 'long'], ['Int32', 'int']]:
+
+public class ${n}_${t1} {
+  public let ptr:OpaquePointer?
+  @usableFromInline let g:RandGen
+  public init(_ g_:RandGen, _ ds:Array<Double>) {
+    g=g_; ptr=${n}_${t2}_create(ds.p, ds.p+ds.count);
+  }
+  deinit { ${n}_${t2}_destroy(ptr) }
+  @inlinable public subscript ()->${t1} { return gen() } 
+  @inlinable public func gen()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+}
+extension ${t1} {
+  public static func ${n}(_ g_:RandGen, _ ds:Array<Double>)->${n}_${t1} {return ${n}_${t1}(g_, ds)}
+}
+
+  % end
 % end
 

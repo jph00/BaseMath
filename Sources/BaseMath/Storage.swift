@@ -1,11 +1,12 @@
 import Foundation
 
-extension Array: BaseVector where Element:SupportsBasicMath {
+extension Array where Element:SignedNumeric {
   public init(_ count:Int) { self.init(repeating:0, count:count) }
-
   public func copy() -> Array { return (self as NSCopying).copy(with: nil) as! Array }
-  public var p:MutPtrT {get {return UnsafeMutablePointer(mutating: self)}}
+  public var p:UnsafeMutablePointer<Element> {get {return UnsafeMutablePointer(mutating: self)}}
 }
+
+extension Array: BaseVector where Element:SupportsBasicMath { }
 
 public protocol ComposedStorage {
   associatedtype Storage:MutableCollection where Storage.Index==Int
@@ -20,9 +21,7 @@ public extension ComposedStorage {
   var endIndex: Int { return data.count }
 }
 
-extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable where Element:SupportsBasicMath {
-  public typealias ArrayLiteralElement=Element
-
+extension UnsafeMutableBufferPointer where Element:SignedNumeric {
   public init(_ count:Int) {
     let sz = MemoryLayout<Element>.stride
     let raw = UnsafeMutableRawBufferPointer.allocate(byteCount: sz*count, alignment: 64)
@@ -32,9 +31,12 @@ extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equat
     self.init(array.count)
     _ = initialize(from:array)
   }
-
-  public var p:MutPtrT {get {return baseAddress!}}
+  public var p:UnsafeMutablePointer<Element> {get {return baseAddress!}}
   public func copy()->UnsafeMutableBufferPointer { return .init(Array(self)) }
+}
+
+extension UnsafeMutableBufferPointer: BaseVector,ExpressibleByArrayLiteral,Equatable where Element:SupportsBasicMath {
+  public typealias ArrayLiteralElement=Element
 }
 
 public class AlignedStorage<T:SupportsBasicMath>: BaseVector, ComposedStorage {
