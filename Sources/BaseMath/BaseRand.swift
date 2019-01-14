@@ -6,11 +6,11 @@ public class RandGen {
   public init() { ptr=RandGen_create() }
   deinit { RandGen_destroy(ptr) }
 
-  @usableFromInline static var storeKey:String { get { return "RandGen" } }
-  @usableFromInline static var stored:RandGen { get {
+  @usableFromInline static var storeKey:String { return "RandGen" }
+  @usableFromInline static var stored:RandGen {
     if let r = Thread.current.threadDictionary[storeKey] as? RandGen { return r }
     return Thread.setToTLS(RandGen(), storeKey)
-  }}
+  }
 }
 
 

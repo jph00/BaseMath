@@ -2,6 +2,10 @@ import Foundation
 import CBaseMath
 import BaseMath
 
+let arr = Int.discrete_distribution([40, 10, 10, 40])[10000]
+let counts = arr.reduce(into: [:]) { $0[$1, default:0] += 1 }
+counts.sorted(by:<).forEach { print("\($0) generated \($1) times") }
+
 let dist01 = Int.uniform_int_distribution(1,6);       print(dist01[])
 let dist02 = Int32.uniform_int_distribution(10,60);   print(dist02[])
 let dist03 = Float.uniform_real_distribution(0,1);    print(dist03[])
