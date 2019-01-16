@@ -46,8 +46,9 @@ gyb: $(sources)
 %.hpp: %.hpp.gyb
 	gyb --line-directive '' -o $@ $<
 
-Sources/BaseMath/BaseMath.swift Sources/BaseMath/BaseVector.swift Sources/CBaseMath/CBaseMath.cpp: mathfuncs.py
+Sources/BaseMath/BaseRandom.swift Sources/BaseMath/CBaseRandom.swift Sources/BaseMath/BaseMath.swift Sources/BaseMath/BaseVector.swift Sources/CBaseMath/CBaseMath.cpp: mathfuncs.py cpp_template.py cpp_types.py c2swift.py
 Sources/CBaseMath/include/CBaseMath.h: Sources/CBaseMath/CBaseMath.cpp
+Sources/CBaseMath/include/CBaseRandom.h: Sources/CBaseMath/CBaseRandom.cpp
 
 .PHONY: clean   
 clean:

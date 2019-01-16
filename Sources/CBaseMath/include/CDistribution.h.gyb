@@ -1,4 +1,8 @@
-%{ import sys; sys.path.append('../../..'); from cpp_template import * }%
+%{
+import sys; sys.path.append('../../..');
+from cpp_template import *
+from cpp_types import *
+}%
 
 #ifdef __cplusplus
 extern "C" {
@@ -6,7 +10,10 @@ extern "C" {
 
 #define OVERLOADABLE __attribute__((overloadable))
 #include <stdbool.h>
-#include "CDistribution.h"
+
+% for t in gen_types+dist_types:
+${t.cpp_decl()}
+% end
 
 ${ make_header(__file__) }
 

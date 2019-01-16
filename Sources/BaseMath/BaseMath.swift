@@ -9,10 +9,13 @@ extension BinaryFloatingPoint where Self: CVarArg {
 precedencegroup ExponentiationPrecedence { associativity: right higherThan: MultiplicationPrecedence }
 infix operator ^^: ExponentiationPrecedence
 
-public protocol SupportsBasicMath:BinaryFloatingPoint {
+public extension Numeric {
   typealias Element=Self
   typealias PtrT = UnsafePointer<Element> 
   typealias MutPtrT = UnsafeMutablePointer<Element>
+}
+
+public protocol SupportsBasicMath:BinaryFloatingPoint {
   init(_ value: Self)
   init()
 

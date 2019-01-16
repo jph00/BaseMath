@@ -1,0 +1,19 @@
+#include "include/CDistribution.h"
+
+%{
+import sys; sys.path.append('../..');
+from cpp_template import *
+from cpp_types import *
+}%
+
+#include <random>
+#include <cmath>
+
+using namespace std; 
+
+% for t in gen_types+dist_types:
+${t.cpp_impl()}
+% end
+% for t in dist_types:
+% end
+ 

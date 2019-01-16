@@ -2,59 +2,9 @@
 
 %{ import sys; sys.path.append('../..'); from mathfuncs import * }%
 
-#include <random>
 #include <cmath>
 
 using namespace std; 
-
-extern "C" {
-
-struct RandGenC:mt19937 {}; 
-typedef struct RandGenC RandGenC;
-RandGenC* RandGen_create() { return (RandGenC*)(new mt19937(random_device()())); }
-void RandGen_destroy(RandGenC* v) { delete(v); }
-
-%{
-int_types = [
-  ['uniform_int_distribution', '# a,# b', 'a,b'],
-  ['binomial_distribution', '# t, double p', 't,p'],
-  ['negative_binomial_distribution', '# k, double p', 'k,p'],
-  ['geometric_distribution', 'double p', 'p'], 
-  ['poisson_distribution', 'double mean', 'mean'], 
-  ['discrete_distribution', 'double* start, double* end','start,end'],
-]
-real_types = [
-  ['uniform_real_distribution', '# a,# b', 'a,b'],
-  ['exponential_distribution', '# l', 'l'],
-  ['gamma_distribution', '# a,# b', 'a,b'],
-  ['weibull_distribution', '# a,# b', 'a,b'],
-  ['normal_distribution', '# mean,# stddev', 'mean,stddev'],
-  ['lognormal_distribution', '# m,# s', 'm,s'],
-  ['chi_squared_distribution', '# n', 'n'],
-  ['cauchy_distribution', '# a,# b', 'a,b'],
-  ['fisher_f_distribution', '# m,# n', 'm,n'],
-  ['student_t_distribution', '# n', 'n'],
-  ['piecewise_constant_distribution', 'double* start_i, double* end_i, double* start_w','start_i,end_i,start_w'],
-  ['piecewise_linear_distribution', 'double* start_i, double* end_i, double* start_w','start_i,end_i,start_w'],
-]
-bool_types = [
-  ['bernoulli_distribution', 'double p', 'p'],
-]
-types  = [(n,t,p1.replace('#',t),p2) for n,p1,p2 in int_types  for t in ['int','long']]
-types += [(n,t,p1.replace('#',t),p2) for n,p1,p2 in real_types for t in ['float','double']]
-types += [(n,'bool',p1,p2) for n,p1,p2 in bool_types]
-}%
-
-% for n,t,p1,p2 in types:
-%{ suf = '' if t=='bool' else f'<{t}>' }%
-
-struct ${n}_${t}C:${n}${suf} {};
-typedef struct ${n}_${t}C ${n}_${t}C;
-${n}_${t}C* ${n}_${t}_create(${p1}) { return (${n}_${t}C*)(new ${n}${suf}(${p2})); }
-void ${n}_${t}_destroy(${n}_${t}C* v) { delete(v); }
-${t} ${n}_${t}_call(${n}_${t}C* p, RandGenC* g) {return (*p)(*g);}
-
-% end # n,t
 
 % for t,s in zip(ctypes,['f','']):
 
@@ -94,6 +44,4 @@ void sm_${f}_${t}(const ${t}* __restrict__ pSrc, ${t}* __restrict__ pDst, const 
   % end # f
 
 % end # t
-
-}
 

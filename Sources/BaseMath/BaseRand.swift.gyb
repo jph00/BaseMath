@@ -1,59 +1,44 @@
 import Foundation
 import CBaseMath
 
-public class RandGen {
-  public let ptr:OpaquePointer?
-  public init() { ptr=RandGen_create() }
-  deinit { RandGen_destroy(ptr) }
-
-  @usableFromInline static var storeKey:String { get { return "RandGen" } }
-  @usableFromInline static var stored:RandGen { get {
-    if let r = Thread.current.threadDictionary[storeKey] as? RandGen { return r }
-    return Thread.setToTLS(RandGen(), storeKey)
-  }}
-}
-
-%{
-int_types = [
-  ['uniform_int_distribution', '_ a:#, _ b:#', 'a,b'],
-  ['binomial_distribution', '_ t:#, _ p:Double', 't,p'],
-  ['negative_binomial_distribution', '_ k:#, _ p:Double', 'k,p'],
-  ['geometric_distribution', '_ p:Double', 'p'],
-  ['poisson_distribution', '_ mean:Double', 'mean'],
-]
-real_types = [
-  ['uniform_real_distribution', '_ a:#,_ b:#', 'a,b'],
-  ['exponential_distribution', '_ l:#', 'l'],
-  ['gamma_distribution', '_ a:#,_ b:#', 'a,b'],
-  ['weibull_distribution', '_ a:#,_ b:#', 'a,b'],
-  ['normal_distribution', '_ mean:#,_ stddev:#', 'mean,stddev'],
-  ['lognormal_distribution', '_ m:#,_ s:#', 'm,s'],
-  ['chi_squared_distribution', '_ n:#', 'n'],
-  ['cauchy_distribution', '_ a:#,_ b:#', 'a,b'],
-  ['fisher_f_distribution', '_ m:#,_ n:#', 'm,n'],
-  ['student_t_distribution', '_ n:#', 'n'],
-]
-bool_types = [
-  #['bernoulli_distribution', '_ p:Double', 'p'],
-]
-types  = [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in int_types  for t1,t2 in [['Int32','int'],['Int','long']]]
-types += [(n,t1,t2,p1.replace('#',t1),p2) for n,p1,p2 in real_types for t1,t2 in [['Float','float'],['Double','double']]]
-types += [(n,'Bool','bool',p1,p2) for n,p1,p2 in bool_types]
-}%
+%{ import sys; sys.path.append('../..'); from cpp_template import *; from cpp_types import * }%
 
 public protocol Initable { init() }
-% for t in "Float Double Int Int32 Bool".split():
+% for t in float_swift+int_swift+['Bool']:
 extension ${t}:Initable {}
 % end
 
-public protocol Distribution:Nullary {
-  subscript()->Element {get}
-  subscript(n:Int)->[Element] {get}
-  func gen_array(_ n:Int)->[Element]
-  func gen_aligned(_ n:Int)->AlignedStorage<Element>
-  func gen_pointer(_ n:Int)->UnsafeMutableBufferPointer<Element>
+public protocol CppTypePtr {
+  func delete()
 }
-extension Distribution {
+
+public class CppType<T:CppTypePtr> {
+  public let p:T
+  init(_ p:T) {self.p=p}
+  deinit {p.delete()}
+}
+
+public class mt19937:CppType<mt19937C> {
+  public convenience init() { self.init(CBaseMath.mt19937_create()) }
+
+  @usableFromInline static var storeKey:String { get { return "mt19937" } }
+  @usableFromInline static var stored:mt19937 { get {
+    if let r = Thread.current.threadDictionary[storeKey] as? mt19937 { return r }
+    return Thread.setToTLS(mt19937(), storeKey)
+  }}
+}
+
+public protocol DistributionC:CppTypePtr {
+  associatedtype Element:SignedNumeric
+  func call(_ g:mt19937C)->Element
+}
+
+public class Distribution<T:DistributionC>:CppType<T>,Nullary {
+  public typealias Element=T.Element
+  public var g:mt19937
+
+  init(_ p:T, _ g:mt19937) {self.g=g; super.init(p) }
+  @inlinable public subscript()->Element { return p.call(g.p) }
   public subscript(n:Int)->[Element] { return gen_array(n) }
   public func gen_array(_ n:Int)->[Element] {
     return [Element].fill(self, n)
@@ -66,55 +51,49 @@ extension Distribution {
   }
 }
 
-% for n,t1,t2,p1,p2 in types:
-public final class ${n}_${t1}:Distribution {
-  public let ptr:OpaquePointer?
-  @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, ${p1}) { ptr=${n}_${t2}_create(${p2}); g=g_ }
-  public convenience init(${p1}) { self.init(RandGen.stored, ${p2}) }
-  deinit { ${n}_${t2}_destroy(ptr) }
-  @inlinable public subscript()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+% for o in dist_types:
+  % for gs,gc in o.generics:
+%{
+n = o.typ
+p1 = o.pswift.replace('#',gs)
+p2 = o.p2
+sep = "," if p1 else ""
+}%
+
+public final class ${n}_${gs}:Distribution<${n}${gc}C> {
+  public init(_ g_:mt19937 ${sep} ${p1}) { super.init(${n}_create(${p2}, Element.init()), g_) }
+  public convenience init(${p1}) { self.init(mt19937.stored, ${p2}) }
 }
-extension ${t1} {
-  public static func ${n}(_ g_:RandGen, ${p1})->${n}_${t1} {return ${n}_${t1}(g_, ${p2})}
-  public static func ${n}(${p1})->${n}_${t1} {return ${n}_${t1}(${p2})}
+% if not gs:
+/*
+% end
+extension ${gs} {
+  public static func ${n}(_ g_:mt19937 ${sep} ${p1})->${n}_${gs} {return ${n}_${gs}(g_, ${p2})}
+  public static func ${n}(${p1})->${n}_${gs} {return ${n}_${gs}(${p2})}
+}
+% if not gs:
+*/
+% end
+  % end # g
+% end # o
+
+% for t in int_swift:
+extension ${t} {
+  public static func discrete_distribution(_ d_s:[Double])->discrete_distribution_${t} {
+    return discrete_distribution(d_s.p, d_s.p+d_s.count)
+  }
 }
 % end
 
-%{ n = 'discrete_distribution' }%
-% for t1,t2 in [['Int', 'long'], ['Int32', 'int']]:
 
-public class ${n}_${t1}:Distribution {
-  public let ptr:OpaquePointer?
-  @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ d_s:[Double]) { ptr=${n}_${t2}_create(d_s.p, d_s.p+d_s.count); g=g_; }
-  public convenience init(_ d_s:[Double]) { self.init(RandGen.stored, d_s) }
-  deinit { ${n}_${t2}_destroy(ptr) }
-  @inlinable public subscript()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
+% for t in float_swift:
+extension ${t} {
+  public static func piecewise_constant_distribution(_ i_s:[Double], _ w_s:[Double])->piecewise_constant_distribution_${t} {
+    return piecewise_constant_distribution(i_s.p, i_s.p+i_s.count, w_s.p)
+  }
+  public static func piecewise_linear_distribution(_ i_s:[Double], _ w_s:[Double])->piecewise_linear_distribution_${t} {
+    return piecewise_linear_distribution(i_s.p, i_s.p+i_s.count, w_s.p)
+  }
 }
-extension ${t1} {
-  public static func ${n}(_ g_:RandGen, _ d_s:[Double])->${n}_${t1} {return ${n}_${t1}(g_, d_s)}
-  public static func ${n}(_ d_s:[Double])->${n}_${t1} {return ${n}_${t1}(d_s)}
-}
-
-% end
-
-% for n in ['piecewise_constant_distribution', 'piecewise_linear_distribution']:
-  % for t1,t2 in [['Float', 'float'], ['Double', 'double']]:
-
-public class ${n}_${t1}:Distribution {
-  public let ptr:OpaquePointer?
-  @usableFromInline let g:RandGen
-  public init(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double]) { ptr=${n}_${t2}_create(i_s.p, i_s.p+i_s.count, w_s.p); g=g_; }
-  public convenience init(_ i_s:[Double], _ w_s:[Double]) { self.init(RandGen.stored, i_s, w_s) }
-  deinit { ${n}_${t2}_destroy(ptr) }
-  @inlinable public subscript()->${t1} { return ${n}_${t2}_call(ptr, g.ptr) }
-}
-extension ${t1} {
-  public static func ${n}(_ g_:RandGen, _ i_s:[Double], _ w_s:[Double])->${n}_${t1} {return ${n}_${t1}(g_, i_s, w_s)}
-  public static func ${n}(_ i_s:[Double], _ w_s:[Double])->${n}_${t1} {return ${n}_${t1}(i_s, w_s)}
-}
-
-  % end
 % end
 
