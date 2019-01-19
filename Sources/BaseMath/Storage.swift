@@ -2,7 +2,12 @@ import Foundation
 
 extension Array where Element:SignedNumeric {
   public init(_ count:Int) { self.init(repeating:0, count:count) }
-  public func copy() -> Array { return (self as NSCopying).copy(with: nil) as! Array }
+  public func copy() -> Array {
+    var a = (self as NSCopying).copy(with: nil) as! Array
+    // HACK: force a copy. Must be a better way...
+    a[0] = a[0]
+    return a
+  }
   public var p:UnsafeMutablePointer<Element> {get {return UnsafeMutablePointer(mutating: self)}}
 }
 

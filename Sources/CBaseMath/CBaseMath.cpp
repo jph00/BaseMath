@@ -711,4 +711,4 @@ OVERLOADABLE void sm_tgamma(const double* __restrict__ pSrc, double* __restrict_
   for (int i=0; i<len; ++i) { pDst[i] = tgamma(pSrc[i]); }
 }
 
- 
+
