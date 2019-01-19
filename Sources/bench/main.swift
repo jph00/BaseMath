@@ -2,6 +2,50 @@ import Foundation
 import CBaseMath
 import BaseMath
 
+protocol RealType:BinaryFloatingPoint {}
+extension Float: RealType { }
+extension Double: RealType { }
+
+/*
+func sin_<T:RealType>(_ a:T)->T {
+  return sin(a)
+}
+let s = sin_(0.3)
+print(s)
+*/
+
+protocol IntType:SignedNumeric {
+  associatedtype BinomialDistributionC:DistributionC
+  typealias U = BinomialDistributionC.Element
+  typealias BinomialDistribution=Distribution<BinomialDistributionC>
+  static func binomial_distribution_create(_ t:Self,_ p:Double)->BinomialDistributionC
+}
+extension IntType {
+  public static func binomial_distribution(_ t:Self,_ p:Double)->BinomialDistribution {
+    return BinomialDistribution(Self.binomial_distribution_create(t,p), mt19937.stored)
+  }
+}
+extension Int32: IntType {
+  public typealias BinomialDistributionC=binomial_distributionintC
+  public static func binomial_distribution_create(_ t:Int32,_ p:Double)->BinomialDistributionC {
+    return CBaseMath.binomial_distribution_create(t,p,.init())
+  }
+}
+extension Int: IntType {
+  public typealias BinomialDistributionC=binomial_distributionlongC
+  public static func binomial_distribution_create(_ t:Int,_ p:Double)->BinomialDistributionC {
+    return CBaseMath.binomial_distribution_create(t,p,.init())
+  }
+}
+
+func gen_binomial<T:IntType>(_ t:T, _ p:Double)->T.U {
+  let d = T.binomial_distribution(t,p)
+  return d[]
+}
+
+let r = gen_binomial(3,0.5)
+print(r)
+
 let arr = Int.discrete_distribution([40, 10, 10, 40])[10000]
 let counts = arr.reduce(into: [:]) { $0[$1, default:0] += 1 }
 counts.sorted(by:<).forEach { print("\($0) generated \($1) times") }
@@ -52,7 +96,7 @@ benchmark(title:"pointer sum") {
   a1 = 0; for i in 0..<size {a1+=p1[i]}
 }
 print(a1)
-benchmark(title:"C sum") {a1 = smSum_float(ar1.p, ar1.c)}
+benchmark(title:"C sum") {a1 = smSum(ar1.p, ar1.c)}
 print(a1)
 
 /*

@@ -1,7 +1,7 @@
+%{ import sys; sys.path.append('../..'); from cpp_template import *; from cpp_types import * }%
+
 import Foundation
 import CBaseMath
-
-%{ import sys; sys.path.append('../..'); from cpp_template import *; from cpp_types import * }%
 
 % for o in all_types:
 ${o.swift()}

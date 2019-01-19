@@ -2,7 +2,7 @@ import XCTest
 @testable import BaseMath
 
 protocol TestProtocol {
-  associatedtype T:BaseVector
+  associatedtype T:FloatVector
   typealias E=T.Element
   var v1:T {get}
   var v2:T {get}

@@ -6,18 +6,14 @@
 using namespace std; 
 
 
-void sm_add_float(const float* __restrict__ pSrc, const float val, float* __restrict__ pDst, const int len) {
-  for (int i=0; i<len; ++i) { pDst[i] = pSrc[i]+val; }
-}
-
-float smSum_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { r += pSrc[i]; }
   return r;
 }
 
-float smSum_sqr_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_sqr(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -25,7 +21,7 @@ float smSum_sqr_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-float smSum_abs_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_abs(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -33,12 +29,11 @@ float smSum_abs_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_abs_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_abs(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = abs(pSrc[i]); }
 }
-float smSum_sqrt_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_sqrt(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -46,12 +41,11 @@ float smSum_sqrt_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_sqrt_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_sqrt(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = sqrt(pSrc[i]); }
 }
-float smSum_acos_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_acos(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -59,12 +53,11 @@ float smSum_acos_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_acos_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_acos(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = acos(pSrc[i]); }
 }
-float smSum_acosh_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_acosh(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -72,12 +65,11 @@ float smSum_acosh_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_acosh_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_acosh(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = acosh(pSrc[i]); }
 }
-float smSum_asin_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_asin(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -85,12 +77,11 @@ float smSum_asin_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_asin_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_asin(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = asin(pSrc[i]); }
 }
-float smSum_asinh_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_asinh(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -98,12 +89,11 @@ float smSum_asinh_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_asinh_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_asinh(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = asinh(pSrc[i]); }
 }
-float smSum_atan_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_atan(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -111,12 +101,11 @@ float smSum_atan_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_atan_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_atan(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = atan(pSrc[i]); }
 }
-float smSum_atanh_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_atanh(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -124,12 +113,11 @@ float smSum_atanh_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_atanh_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_atanh(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = atanh(pSrc[i]); }
 }
-float smSum_cbrt_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_cbrt(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -137,12 +125,11 @@ float smSum_cbrt_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_cbrt_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_cbrt(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = cbrt(pSrc[i]); }
 }
-float smSum_cos_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_cos(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -150,12 +137,11 @@ float smSum_cos_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_cos_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_cos(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = cos(pSrc[i]); }
 }
-float smSum_cosh_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_cosh(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -163,12 +149,11 @@ float smSum_cosh_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_cosh_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_cosh(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = cosh(pSrc[i]); }
 }
-float smSum_erf_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_erf(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -176,12 +161,11 @@ float smSum_erf_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_erf_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_erf(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = erf(pSrc[i]); }
 }
-float smSum_erfc_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_erfc(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -189,12 +173,11 @@ float smSum_erfc_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_erfc_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_erfc(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = erfc(pSrc[i]); }
 }
-float smSum_exp_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_exp(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -202,12 +185,11 @@ float smSum_exp_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_exp_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_exp(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = exp(pSrc[i]); }
 }
-float smSum_exp2_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_exp2(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -215,12 +197,11 @@ float smSum_exp2_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_exp2_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_exp2(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = exp2(pSrc[i]); }
 }
-float smSum_expm1_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_expm1(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -228,12 +209,11 @@ float smSum_expm1_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_expm1_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_expm1(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = expm1(pSrc[i]); }
 }
-float smSum_log_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_log(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -241,12 +221,11 @@ float smSum_log_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log(pSrc[i]); }
 }
-float smSum_log10_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_log10(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -254,12 +233,11 @@ float smSum_log10_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log10_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log10(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log10(pSrc[i]); }
 }
-float smSum_log1p_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_log1p(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -267,12 +245,11 @@ float smSum_log1p_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log1p_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log1p(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log1p(pSrc[i]); }
 }
-float smSum_log2_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_log2(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -280,12 +257,11 @@ float smSum_log2_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log2_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log2(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log2(pSrc[i]); }
 }
-float smSum_logb_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_logb(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -293,12 +269,11 @@ float smSum_logb_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_logb_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_logb(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = logb(pSrc[i]); }
 }
-float smSum_nearbyint_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_nearbyint(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -306,12 +281,11 @@ float smSum_nearbyint_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_nearbyint_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_nearbyint(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = nearbyint(pSrc[i]); }
 }
-float smSum_rint_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_rint(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -319,12 +293,11 @@ float smSum_rint_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_rint_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_rint(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = rint(pSrc[i]); }
 }
-float smSum_sin_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_sin(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -332,12 +305,11 @@ float smSum_sin_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_sin_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_sin(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = sin(pSrc[i]); }
 }
-float smSum_sinh_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_sinh(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -345,12 +317,11 @@ float smSum_sinh_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_sinh_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_sinh(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = sinh(pSrc[i]); }
 }
-float smSum_tan_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_tan(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -358,12 +329,11 @@ float smSum_tan_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_tan_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_tan(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = tan(pSrc[i]); }
 }
-float smSum_tanh_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_tanh(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -371,12 +341,11 @@ float smSum_tanh_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_tanh_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_tanh(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = tanh(pSrc[i]); }
 }
-float smSum_tgamma_float(const float* __restrict__ pSrc, const int len) {
+OVERLOADABLE float smSum_tgamma(const float* __restrict__ pSrc, const int len) {
   float r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -384,25 +353,20 @@ float smSum_tgamma_float(const float* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_tgamma_float(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_tgamma(const float* __restrict__ pSrc, float* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = tgamma(pSrc[i]); }
 }
 
 
-void sm_add_double(const double* __restrict__ pSrc, const double val, double* __restrict__ pDst, const int len) {
-  for (int i=0; i<len; ++i) { pDst[i] = pSrc[i]+val; }
-}
-
-double smSum_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { r += pSrc[i]; }
   return r;
 }
 
-double smSum_sqr_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_sqr(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -410,7 +374,7 @@ double smSum_sqr_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-double smSum_abs_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_abs(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -418,12 +382,11 @@ double smSum_abs_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_abs_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_abs(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = abs(pSrc[i]); }
 }
-double smSum_sqrt_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_sqrt(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -431,12 +394,11 @@ double smSum_sqrt_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_sqrt_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_sqrt(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = sqrt(pSrc[i]); }
 }
-double smSum_acos_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_acos(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -444,12 +406,11 @@ double smSum_acos_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_acos_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_acos(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = acos(pSrc[i]); }
 }
-double smSum_acosh_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_acosh(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -457,12 +418,11 @@ double smSum_acosh_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_acosh_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_acosh(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = acosh(pSrc[i]); }
 }
-double smSum_asin_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_asin(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -470,12 +430,11 @@ double smSum_asin_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_asin_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_asin(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = asin(pSrc[i]); }
 }
-double smSum_asinh_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_asinh(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -483,12 +442,11 @@ double smSum_asinh_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_asinh_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_asinh(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = asinh(pSrc[i]); }
 }
-double smSum_atan_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_atan(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -496,12 +454,11 @@ double smSum_atan_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_atan_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_atan(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = atan(pSrc[i]); }
 }
-double smSum_atanh_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_atanh(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -509,12 +466,11 @@ double smSum_atanh_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_atanh_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_atanh(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = atanh(pSrc[i]); }
 }
-double smSum_cbrt_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_cbrt(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -522,12 +478,11 @@ double smSum_cbrt_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_cbrt_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_cbrt(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = cbrt(pSrc[i]); }
 }
-double smSum_cos_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_cos(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -535,12 +490,11 @@ double smSum_cos_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_cos_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_cos(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = cos(pSrc[i]); }
 }
-double smSum_cosh_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_cosh(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -548,12 +502,11 @@ double smSum_cosh_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_cosh_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_cosh(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = cosh(pSrc[i]); }
 }
-double smSum_erf_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_erf(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -561,12 +514,11 @@ double smSum_erf_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_erf_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_erf(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = erf(pSrc[i]); }
 }
-double smSum_erfc_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_erfc(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -574,12 +526,11 @@ double smSum_erfc_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_erfc_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_erfc(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = erfc(pSrc[i]); }
 }
-double smSum_exp_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_exp(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -587,12 +538,11 @@ double smSum_exp_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_exp_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_exp(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = exp(pSrc[i]); }
 }
-double smSum_exp2_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_exp2(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -600,12 +550,11 @@ double smSum_exp2_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_exp2_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_exp2(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = exp2(pSrc[i]); }
 }
-double smSum_expm1_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_expm1(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -613,12 +562,11 @@ double smSum_expm1_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_expm1_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_expm1(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = expm1(pSrc[i]); }
 }
-double smSum_log_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_log(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -626,12 +574,11 @@ double smSum_log_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log(pSrc[i]); }
 }
-double smSum_log10_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_log10(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -639,12 +586,11 @@ double smSum_log10_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log10_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log10(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log10(pSrc[i]); }
 }
-double smSum_log1p_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_log1p(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -652,12 +598,11 @@ double smSum_log1p_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log1p_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log1p(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log1p(pSrc[i]); }
 }
-double smSum_log2_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_log2(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -665,12 +610,11 @@ double smSum_log2_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_log2_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_log2(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = log2(pSrc[i]); }
 }
-double smSum_logb_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_logb(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -678,12 +622,11 @@ double smSum_logb_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_logb_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_logb(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = logb(pSrc[i]); }
 }
-double smSum_nearbyint_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_nearbyint(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -691,12 +634,11 @@ double smSum_nearbyint_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_nearbyint_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_nearbyint(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = nearbyint(pSrc[i]); }
 }
-double smSum_rint_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_rint(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -704,12 +646,11 @@ double smSum_rint_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_rint_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_rint(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = rint(pSrc[i]); }
 }
-double smSum_sin_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_sin(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -717,12 +658,11 @@ double smSum_sin_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_sin_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_sin(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = sin(pSrc[i]); }
 }
-double smSum_sinh_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_sinh(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -730,12 +670,11 @@ double smSum_sinh_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_sinh_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_sinh(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = sinh(pSrc[i]); }
 }
-double smSum_tan_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_tan(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -743,12 +682,11 @@ double smSum_tan_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_tan_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_tan(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = tan(pSrc[i]); }
 }
-double smSum_tanh_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_tanh(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -756,12 +694,11 @@ double smSum_tanh_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_tanh_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_tanh(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = tanh(pSrc[i]); }
 }
-double smSum_tgamma_double(const double* __restrict__ pSrc, const int len) {
+OVERLOADABLE double smSum_tgamma(const double* __restrict__ pSrc, const int len) {
   double r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -769,10 +706,9 @@ double smSum_tgamma_double(const double* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_tgamma_double(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_tgamma(const double* __restrict__ pSrc, double* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = tgamma(pSrc[i]); }
 }
 
-
+ 

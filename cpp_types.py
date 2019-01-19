@@ -13,7 +13,7 @@ int_dist = [
   cpp("poisson_distribution", "double mean"),
   cpp("discrete_distribution", "double* start, double* end"),
 ]
-for o in int_dist: o.gens = int_swift
+for o in int_dist: o.gens = int_c
 real_dist = [
   cpp("uniform_real_distribution", "# a,# b"),
   cpp("exponential_distribution", "# l"),
@@ -28,7 +28,7 @@ real_dist = [
   cpp("piecewise_constant_distribution", "double* start_i, double* end_i, double* start_w"),
   cpp("piecewise_linear_distribution", "double* start_i, double* end_i, double* start_w"),
 ]
-for o in real_dist: o.gens = float_swift
+for o in real_dist: o.gens = float_c
 dist_types = int_dist+real_dist
 all_types = dist_types+gen_types
 for o in all_types: o.module = 'CBaseMath'

@@ -23,7 +23,7 @@ public class mt19937:CppType<mt19937C> {
   public convenience init() { self.init(CBaseMath.mt19937_create()) }
 
   @usableFromInline static var storeKey:String { get { return "mt19937" } }
-  @usableFromInline static var stored:mt19937 { get {
+  public static var stored:mt19937 { get {
     if let r = Thread.current.threadDictionary[storeKey] as? mt19937 { return r }
     return Thread.setToTLS(mt19937(), storeKey)
   }}
@@ -38,7 +38,7 @@ public class Distribution<T:DistributionC>:CppType<T>,Nullary {
   public typealias Element=T.Element
   public var g:mt19937
 
-  init(_ p:T, _ g:mt19937) {self.g=g; super.init(p) }
+  public init(_ p:T, _ g:mt19937) {self.g=g; super.init(p) }
   @inlinable public subscript()->Element { return p.call(g.p) }
   public subscript(n:Int)->[Element] { return gen_array(n) }
   public func gen_array(_ n:Int)->[Element] {

@@ -1,6 +1,6 @@
+
 import Foundation
 import CBaseMath
-
 
 
 extension uniform_int_distributionlongC:DistributionC {

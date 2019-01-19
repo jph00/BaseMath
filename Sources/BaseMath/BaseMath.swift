@@ -158,36 +158,36 @@ extension Float : SupportsBasicMath {
   @inlinable public func hypot(_ b: Float) -> Float {return Foundation.hypot(self, b)}
   @inlinable public func nextafter(_ b: Float) -> Float {return Foundation.nextafter(self, b)}
 
-  @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_float(a, n) }
-  @inlinable public static func sumabs(_ a:PtrT, _ n:Int32)->Element { return smSum_abs_float(a, n) }
-  @inlinable public static func sumsqrt(_ a:PtrT, _ n:Int32)->Element { return smSum_sqrt_float(a, n) }
-  @inlinable public static func sumacos(_ a:PtrT, _ n:Int32)->Element { return smSum_acos_float(a, n) }
-  @inlinable public static func sumacosh(_ a:PtrT, _ n:Int32)->Element { return smSum_acosh_float(a, n) }
-  @inlinable public static func sumasin(_ a:PtrT, _ n:Int32)->Element { return smSum_asin_float(a, n) }
-  @inlinable public static func sumasinh(_ a:PtrT, _ n:Int32)->Element { return smSum_asinh_float(a, n) }
-  @inlinable public static func sumatan(_ a:PtrT, _ n:Int32)->Element { return smSum_atan_float(a, n) }
-  @inlinable public static func sumatanh(_ a:PtrT, _ n:Int32)->Element { return smSum_atanh_float(a, n) }
-  @inlinable public static func sumcbrt(_ a:PtrT, _ n:Int32)->Element { return smSum_cbrt_float(a, n) }
-  @inlinable public static func sumcos(_ a:PtrT, _ n:Int32)->Element { return smSum_cos_float(a, n) }
-  @inlinable public static func sumcosh(_ a:PtrT, _ n:Int32)->Element { return smSum_cosh_float(a, n) }
-  @inlinable public static func sumerf(_ a:PtrT, _ n:Int32)->Element { return smSum_erf_float(a, n) }
-  @inlinable public static func sumerfc(_ a:PtrT, _ n:Int32)->Element { return smSum_erfc_float(a, n) }
-  @inlinable public static func sumexp(_ a:PtrT, _ n:Int32)->Element { return smSum_exp_float(a, n) }
-  @inlinable public static func sumexp2(_ a:PtrT, _ n:Int32)->Element { return smSum_exp2_float(a, n) }
-  @inlinable public static func sumexpm1(_ a:PtrT, _ n:Int32)->Element { return smSum_expm1_float(a, n) }
-  @inlinable public static func sumlog(_ a:PtrT, _ n:Int32)->Element { return smSum_log_float(a, n) }
-  @inlinable public static func sumlog10(_ a:PtrT, _ n:Int32)->Element { return smSum_log10_float(a, n) }
-  @inlinable public static func sumlog1p(_ a:PtrT, _ n:Int32)->Element { return smSum_log1p_float(a, n) }
-  @inlinable public static func sumlog2(_ a:PtrT, _ n:Int32)->Element { return smSum_log2_float(a, n) }
-  @inlinable public static func sumlogb(_ a:PtrT, _ n:Int32)->Element { return smSum_logb_float(a, n) }
-  @inlinable public static func sumnearbyint(_ a:PtrT, _ n:Int32)->Element { return smSum_nearbyint_float(a, n) }
-  @inlinable public static func sumrint(_ a:PtrT, _ n:Int32)->Element { return smSum_rint_float(a, n) }
-  @inlinable public static func sumsin(_ a:PtrT, _ n:Int32)->Element { return smSum_sin_float(a, n) }
-  @inlinable public static func sumsinh(_ a:PtrT, _ n:Int32)->Element { return smSum_sinh_float(a, n) }
-  @inlinable public static func sumtan(_ a:PtrT, _ n:Int32)->Element { return smSum_tan_float(a, n) }
-  @inlinable public static func sumtanh(_ a:PtrT, _ n:Int32)->Element { return smSum_tanh_float(a, n) }
-  @inlinable public static func sumtgamma(_ a:PtrT, _ n:Int32)->Element { return smSum_tgamma_float(a, n) }
-  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_float(a, n) }
+  @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum(a, n) }
+  @inlinable public static func sumabs(_ a:PtrT, _ n:Int32)->Element { return smSum_abs(a, n) }
+  @inlinable public static func sumsqrt(_ a:PtrT, _ n:Int32)->Element { return smSum_sqrt(a, n) }
+  @inlinable public static func sumacos(_ a:PtrT, _ n:Int32)->Element { return smSum_acos(a, n) }
+  @inlinable public static func sumacosh(_ a:PtrT, _ n:Int32)->Element { return smSum_acosh(a, n) }
+  @inlinable public static func sumasin(_ a:PtrT, _ n:Int32)->Element { return smSum_asin(a, n) }
+  @inlinable public static func sumasinh(_ a:PtrT, _ n:Int32)->Element { return smSum_asinh(a, n) }
+  @inlinable public static func sumatan(_ a:PtrT, _ n:Int32)->Element { return smSum_atan(a, n) }
+  @inlinable public static func sumatanh(_ a:PtrT, _ n:Int32)->Element { return smSum_atanh(a, n) }
+  @inlinable public static func sumcbrt(_ a:PtrT, _ n:Int32)->Element { return smSum_cbrt(a, n) }
+  @inlinable public static func sumcos(_ a:PtrT, _ n:Int32)->Element { return smSum_cos(a, n) }
+  @inlinable public static func sumcosh(_ a:PtrT, _ n:Int32)->Element { return smSum_cosh(a, n) }
+  @inlinable public static func sumerf(_ a:PtrT, _ n:Int32)->Element { return smSum_erf(a, n) }
+  @inlinable public static func sumerfc(_ a:PtrT, _ n:Int32)->Element { return smSum_erfc(a, n) }
+  @inlinable public static func sumexp(_ a:PtrT, _ n:Int32)->Element { return smSum_exp(a, n) }
+  @inlinable public static func sumexp2(_ a:PtrT, _ n:Int32)->Element { return smSum_exp2(a, n) }
+  @inlinable public static func sumexpm1(_ a:PtrT, _ n:Int32)->Element { return smSum_expm1(a, n) }
+  @inlinable public static func sumlog(_ a:PtrT, _ n:Int32)->Element { return smSum_log(a, n) }
+  @inlinable public static func sumlog10(_ a:PtrT, _ n:Int32)->Element { return smSum_log10(a, n) }
+  @inlinable public static func sumlog1p(_ a:PtrT, _ n:Int32)->Element { return smSum_log1p(a, n) }
+  @inlinable public static func sumlog2(_ a:PtrT, _ n:Int32)->Element { return smSum_log2(a, n) }
+  @inlinable public static func sumlogb(_ a:PtrT, _ n:Int32)->Element { return smSum_logb(a, n) }
+  @inlinable public static func sumnearbyint(_ a:PtrT, _ n:Int32)->Element { return smSum_nearbyint(a, n) }
+  @inlinable public static func sumrint(_ a:PtrT, _ n:Int32)->Element { return smSum_rint(a, n) }
+  @inlinable public static func sumsin(_ a:PtrT, _ n:Int32)->Element { return smSum_sin(a, n) }
+  @inlinable public static func sumsinh(_ a:PtrT, _ n:Int32)->Element { return smSum_sinh(a, n) }
+  @inlinable public static func sumtan(_ a:PtrT, _ n:Int32)->Element { return smSum_tan(a, n) }
+  @inlinable public static func sumtanh(_ a:PtrT, _ n:Int32)->Element { return smSum_tanh(a, n) }
+  @inlinable public static func sumtgamma(_ a:PtrT, _ n:Int32)->Element { return smSum_tgamma(a, n) }
+  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr(a, n) }
 
   public static func ^^(x:Float, a:Float) -> Float { return x.pow(a) }
 }
@@ -247,36 +247,36 @@ extension Double : SupportsBasicMath {
   @inlinable public func hypot(_ b: Double) -> Double {return Foundation.hypot(self, b)}
   @inlinable public func nextafter(_ b: Double) -> Double {return Foundation.nextafter(self, b)}
 
-  @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum_double(a, n) }
-  @inlinable public static func sumabs(_ a:PtrT, _ n:Int32)->Element { return smSum_abs_double(a, n) }
-  @inlinable public static func sumsqrt(_ a:PtrT, _ n:Int32)->Element { return smSum_sqrt_double(a, n) }
-  @inlinable public static func sumacos(_ a:PtrT, _ n:Int32)->Element { return smSum_acos_double(a, n) }
-  @inlinable public static func sumacosh(_ a:PtrT, _ n:Int32)->Element { return smSum_acosh_double(a, n) }
-  @inlinable public static func sumasin(_ a:PtrT, _ n:Int32)->Element { return smSum_asin_double(a, n) }
-  @inlinable public static func sumasinh(_ a:PtrT, _ n:Int32)->Element { return smSum_asinh_double(a, n) }
-  @inlinable public static func sumatan(_ a:PtrT, _ n:Int32)->Element { return smSum_atan_double(a, n) }
-  @inlinable public static func sumatanh(_ a:PtrT, _ n:Int32)->Element { return smSum_atanh_double(a, n) }
-  @inlinable public static func sumcbrt(_ a:PtrT, _ n:Int32)->Element { return smSum_cbrt_double(a, n) }
-  @inlinable public static func sumcos(_ a:PtrT, _ n:Int32)->Element { return smSum_cos_double(a, n) }
-  @inlinable public static func sumcosh(_ a:PtrT, _ n:Int32)->Element { return smSum_cosh_double(a, n) }
-  @inlinable public static func sumerf(_ a:PtrT, _ n:Int32)->Element { return smSum_erf_double(a, n) }
-  @inlinable public static func sumerfc(_ a:PtrT, _ n:Int32)->Element { return smSum_erfc_double(a, n) }
-  @inlinable public static func sumexp(_ a:PtrT, _ n:Int32)->Element { return smSum_exp_double(a, n) }
-  @inlinable public static func sumexp2(_ a:PtrT, _ n:Int32)->Element { return smSum_exp2_double(a, n) }
-  @inlinable public static func sumexpm1(_ a:PtrT, _ n:Int32)->Element { return smSum_expm1_double(a, n) }
-  @inlinable public static func sumlog(_ a:PtrT, _ n:Int32)->Element { return smSum_log_double(a, n) }
-  @inlinable public static func sumlog10(_ a:PtrT, _ n:Int32)->Element { return smSum_log10_double(a, n) }
-  @inlinable public static func sumlog1p(_ a:PtrT, _ n:Int32)->Element { return smSum_log1p_double(a, n) }
-  @inlinable public static func sumlog2(_ a:PtrT, _ n:Int32)->Element { return smSum_log2_double(a, n) }
-  @inlinable public static func sumlogb(_ a:PtrT, _ n:Int32)->Element { return smSum_logb_double(a, n) }
-  @inlinable public static func sumnearbyint(_ a:PtrT, _ n:Int32)->Element { return smSum_nearbyint_double(a, n) }
-  @inlinable public static func sumrint(_ a:PtrT, _ n:Int32)->Element { return smSum_rint_double(a, n) }
-  @inlinable public static func sumsin(_ a:PtrT, _ n:Int32)->Element { return smSum_sin_double(a, n) }
-  @inlinable public static func sumsinh(_ a:PtrT, _ n:Int32)->Element { return smSum_sinh_double(a, n) }
-  @inlinable public static func sumtan(_ a:PtrT, _ n:Int32)->Element { return smSum_tan_double(a, n) }
-  @inlinable public static func sumtanh(_ a:PtrT, _ n:Int32)->Element { return smSum_tanh_double(a, n) }
-  @inlinable public static func sumtgamma(_ a:PtrT, _ n:Int32)->Element { return smSum_tgamma_double(a, n) }
-  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr_double(a, n) }
+  @inlinable public static func sum(_ a:PtrT, _ n:Int32) -> Element { return smSum(a, n) }
+  @inlinable public static func sumabs(_ a:PtrT, _ n:Int32)->Element { return smSum_abs(a, n) }
+  @inlinable public static func sumsqrt(_ a:PtrT, _ n:Int32)->Element { return smSum_sqrt(a, n) }
+  @inlinable public static func sumacos(_ a:PtrT, _ n:Int32)->Element { return smSum_acos(a, n) }
+  @inlinable public static func sumacosh(_ a:PtrT, _ n:Int32)->Element { return smSum_acosh(a, n) }
+  @inlinable public static func sumasin(_ a:PtrT, _ n:Int32)->Element { return smSum_asin(a, n) }
+  @inlinable public static func sumasinh(_ a:PtrT, _ n:Int32)->Element { return smSum_asinh(a, n) }
+  @inlinable public static func sumatan(_ a:PtrT, _ n:Int32)->Element { return smSum_atan(a, n) }
+  @inlinable public static func sumatanh(_ a:PtrT, _ n:Int32)->Element { return smSum_atanh(a, n) }
+  @inlinable public static func sumcbrt(_ a:PtrT, _ n:Int32)->Element { return smSum_cbrt(a, n) }
+  @inlinable public static func sumcos(_ a:PtrT, _ n:Int32)->Element { return smSum_cos(a, n) }
+  @inlinable public static func sumcosh(_ a:PtrT, _ n:Int32)->Element { return smSum_cosh(a, n) }
+  @inlinable public static func sumerf(_ a:PtrT, _ n:Int32)->Element { return smSum_erf(a, n) }
+  @inlinable public static func sumerfc(_ a:PtrT, _ n:Int32)->Element { return smSum_erfc(a, n) }
+  @inlinable public static func sumexp(_ a:PtrT, _ n:Int32)->Element { return smSum_exp(a, n) }
+  @inlinable public static func sumexp2(_ a:PtrT, _ n:Int32)->Element { return smSum_exp2(a, n) }
+  @inlinable public static func sumexpm1(_ a:PtrT, _ n:Int32)->Element { return smSum_expm1(a, n) }
+  @inlinable public static func sumlog(_ a:PtrT, _ n:Int32)->Element { return smSum_log(a, n) }
+  @inlinable public static func sumlog10(_ a:PtrT, _ n:Int32)->Element { return smSum_log10(a, n) }
+  @inlinable public static func sumlog1p(_ a:PtrT, _ n:Int32)->Element { return smSum_log1p(a, n) }
+  @inlinable public static func sumlog2(_ a:PtrT, _ n:Int32)->Element { return smSum_log2(a, n) }
+  @inlinable public static func sumlogb(_ a:PtrT, _ n:Int32)->Element { return smSum_logb(a, n) }
+  @inlinable public static func sumnearbyint(_ a:PtrT, _ n:Int32)->Element { return smSum_nearbyint(a, n) }
+  @inlinable public static func sumrint(_ a:PtrT, _ n:Int32)->Element { return smSum_rint(a, n) }
+  @inlinable public static func sumsin(_ a:PtrT, _ n:Int32)->Element { return smSum_sin(a, n) }
+  @inlinable public static func sumsinh(_ a:PtrT, _ n:Int32)->Element { return smSum_sinh(a, n) }
+  @inlinable public static func sumtan(_ a:PtrT, _ n:Int32)->Element { return smSum_tan(a, n) }
+  @inlinable public static func sumtanh(_ a:PtrT, _ n:Int32)->Element { return smSum_tanh(a, n) }
+  @inlinable public static func sumtgamma(_ a:PtrT, _ n:Int32)->Element { return smSum_tgamma(a, n) }
+  @inlinable public static func sumsqr(_ a:PtrT, _ n:Int32)->Element { return smSum_sqr(a, n) }
 
   public static func ^^(x:Double, a:Double) -> Double { return x.pow(a) }
 }

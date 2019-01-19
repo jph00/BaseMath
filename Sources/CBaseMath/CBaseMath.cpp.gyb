@@ -8,18 +8,14 @@ using namespace std;
 
 % for t,s in zip(ctypes,['f','']):
 
-void sm_add_${t}(const ${t}* __restrict__ pSrc, const ${t} val, ${t}* __restrict__ pDst, const int len) {
-  for (int i=0; i<len; ++i) { pDst[i] = pSrc[i]+val; }
-}
-
-${t} smSum_${t}(const ${t}* __restrict__ pSrc, const int len) {
+OVERLOADABLE ${t} smSum(const ${t}* __restrict__ pSrc, const int len) {
   ${t} r = 0;
   #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { r += pSrc[i]; }
   return r;
 }
 
-${t} smSum_sqr_${t}(const ${t}* __restrict__ pSrc, const int len) {
+OVERLOADABLE ${t} smSum_sqr(const ${t}* __restrict__ pSrc, const int len) {
   ${t} r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -28,7 +24,7 @@ ${t} smSum_sqr_${t}(const ${t}* __restrict__ pSrc, const int len) {
 }
 
   % for f in unaryfs:
-${t} smSum_${f}_${t}(const ${t}* __restrict__ pSrc, const int len) {
+OVERLOADABLE ${t} smSum_${f}(const ${t}* __restrict__ pSrc, const int len) {
   ${t} r = 0;
   #pragma ivdep
   #pragma clang loop interleave_count(8)
@@ -36,9 +32,8 @@ ${t} smSum_${f}_${t}(const ${t}* __restrict__ pSrc, const int len) {
   return r;
 }
 
-void sm_${f}_${t}(const ${t}* __restrict__ pSrc, ${t}* __restrict__ pDst, const int len) {
+OVERLOADABLE void sm_${f}(const ${t}* __restrict__ pSrc, ${t}* __restrict__ pDst, const int len) {
   #pragma ivdep
-  #pragma clang loop interleave_count(8)
   for (int i=0; i<len; ++i) { pDst[i] = ${f}(pSrc[i]); }
 }
   % end # f

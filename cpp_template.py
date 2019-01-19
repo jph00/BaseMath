@@ -52,7 +52,7 @@ struct {t}{g}C {{_inner_{t}{g}* p;}};
 
     @property
     def generics(self):
-        return [(o,type_replace_rev.get(o,o)) for o in self.gens]
+        return [(type_replace.get(o,o),o) for o in self.gens]
 
     def cpp_decl(self):
         res = [self.cpp_decl_(g) for g in self.gens]
@@ -75,17 +75,16 @@ struct {t}{g}C {{_inner_{t}{g}* p;}};
         p1 = ','.join([f"_ {k}:{v}" for k,v in ps.items()])
         p2 = ",".join(ps.keys())
         f,ret = list(parse_types(f).items())[0]
-        if ret=='#': ret=g
+        if ret=='#': ret=type_replace.get(g,g)
         if p2: p2=','+p2
         return f"public func {f}({p1})->{ret} {{ return {self.module}.{f}(self{p2}) }}"
                 #public func call(_ g:mt19937C)->{g} {{ return CBaseMath.call(self, g) }}
 
     def swift_(self, g):
-        g2 = type_replace_rev[g]
         funcs = [self.swift_func_(*func,g) for func in self.funcs]
         funcs = '\n'.join(funcs)
         return f"""
-extension {self.typ}{g2}C:{self.swift_type} {{
+extension {self.typ}{g}C:{self.swift_type} {{
   public func delete() {{destroy(self)}}
   {funcs}
 }}

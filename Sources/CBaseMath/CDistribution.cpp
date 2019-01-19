@@ -1,6 +1,5 @@
+
 #include "include/CDistribution.h"
-
-
 #include <random>
 #include <cmath>
 
@@ -31,14 +30,6 @@ bernoulli_distributionC bernoulli_distribution_create(double p) {
 OVERLOADABLE void destroy(bernoulli_distributionC v) { delete(v.p); }
 
 
-struct _inner_uniform_int_distributionint:uniform_int_distribution<int> {};
-OVERLOADABLE uniform_int_distributionintC uniform_int_distribution_create(int a,int b, int _) {
-  uniform_int_distributionintC r = {(_inner_uniform_int_distributionint*) new uniform_int_distribution<int>(a,b)};
-  return r;
-}
-OVERLOADABLE void destroy(uniform_int_distributionintC v) { delete(v.p); }
-
-
 struct _inner_uniform_int_distributionlong:uniform_int_distribution<long> {};
 OVERLOADABLE uniform_int_distributionlongC uniform_int_distribution_create(long a,long b, long _) {
   uniform_int_distributionlongC r = {(_inner_uniform_int_distributionlong*) new uniform_int_distribution<long>(a,b)};
@@ -46,16 +37,16 @@ OVERLOADABLE uniform_int_distributionlongC uniform_int_distribution_create(long 
 }
 OVERLOADABLE void destroy(uniform_int_distributionlongC v) { delete(v.p); }
 
-OVERLOADABLE int call(uniform_int_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
-OVERLOADABLE long call(uniform_int_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
 
-struct _inner_binomial_distributionint:binomial_distribution<int> {};
-OVERLOADABLE binomial_distributionintC binomial_distribution_create(int t, double p, int _) {
-  binomial_distributionintC r = {(_inner_binomial_distributionint*) new binomial_distribution<int>(t,p)};
+struct _inner_uniform_int_distributionint:uniform_int_distribution<int> {};
+OVERLOADABLE uniform_int_distributionintC uniform_int_distribution_create(int a,int b, int _) {
+  uniform_int_distributionintC r = {(_inner_uniform_int_distributionint*) new uniform_int_distribution<int>(a,b)};
   return r;
 }
-OVERLOADABLE void destroy(binomial_distributionintC v) { delete(v.p); }
+OVERLOADABLE void destroy(uniform_int_distributionintC v) { delete(v.p); }
 
+OVERLOADABLE long call(uniform_int_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
+OVERLOADABLE int call(uniform_int_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
 
 struct _inner_binomial_distributionlong:binomial_distribution<long> {};
 OVERLOADABLE binomial_distributionlongC binomial_distribution_create(long t, double p, long _) {
@@ -64,16 +55,16 @@ OVERLOADABLE binomial_distributionlongC binomial_distribution_create(long t, dou
 }
 OVERLOADABLE void destroy(binomial_distributionlongC v) { delete(v.p); }
 
-OVERLOADABLE int call(binomial_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
-OVERLOADABLE long call(binomial_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
 
-struct _inner_negative_binomial_distributionint:negative_binomial_distribution<int> {};
-OVERLOADABLE negative_binomial_distributionintC negative_binomial_distribution_create(int k, double p, int _) {
-  negative_binomial_distributionintC r = {(_inner_negative_binomial_distributionint*) new negative_binomial_distribution<int>(k,p)};
+struct _inner_binomial_distributionint:binomial_distribution<int> {};
+OVERLOADABLE binomial_distributionintC binomial_distribution_create(int t, double p, int _) {
+  binomial_distributionintC r = {(_inner_binomial_distributionint*) new binomial_distribution<int>(t,p)};
   return r;
 }
-OVERLOADABLE void destroy(negative_binomial_distributionintC v) { delete(v.p); }
+OVERLOADABLE void destroy(binomial_distributionintC v) { delete(v.p); }
 
+OVERLOADABLE long call(binomial_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
+OVERLOADABLE int call(binomial_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
 
 struct _inner_negative_binomial_distributionlong:negative_binomial_distribution<long> {};
 OVERLOADABLE negative_binomial_distributionlongC negative_binomial_distribution_create(long k, double p, long _) {
@@ -82,16 +73,16 @@ OVERLOADABLE negative_binomial_distributionlongC negative_binomial_distribution_
 }
 OVERLOADABLE void destroy(negative_binomial_distributionlongC v) { delete(v.p); }
 
-OVERLOADABLE int call(negative_binomial_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
-OVERLOADABLE long call(negative_binomial_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
 
-struct _inner_geometric_distributionint:geometric_distribution<int> {};
-OVERLOADABLE geometric_distributionintC geometric_distribution_create(double p, int _) {
-  geometric_distributionintC r = {(_inner_geometric_distributionint*) new geometric_distribution<int>(p)};
+struct _inner_negative_binomial_distributionint:negative_binomial_distribution<int> {};
+OVERLOADABLE negative_binomial_distributionintC negative_binomial_distribution_create(int k, double p, int _) {
+  negative_binomial_distributionintC r = {(_inner_negative_binomial_distributionint*) new negative_binomial_distribution<int>(k,p)};
   return r;
 }
-OVERLOADABLE void destroy(geometric_distributionintC v) { delete(v.p); }
+OVERLOADABLE void destroy(negative_binomial_distributionintC v) { delete(v.p); }
 
+OVERLOADABLE long call(negative_binomial_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
+OVERLOADABLE int call(negative_binomial_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
 
 struct _inner_geometric_distributionlong:geometric_distribution<long> {};
 OVERLOADABLE geometric_distributionlongC geometric_distribution_create(double p, long _) {
@@ -100,16 +91,16 @@ OVERLOADABLE geometric_distributionlongC geometric_distribution_create(double p,
 }
 OVERLOADABLE void destroy(geometric_distributionlongC v) { delete(v.p); }
 
-OVERLOADABLE int call(geometric_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
-OVERLOADABLE long call(geometric_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
 
-struct _inner_poisson_distributionint:poisson_distribution<int> {};
-OVERLOADABLE poisson_distributionintC poisson_distribution_create(double mean, int _) {
-  poisson_distributionintC r = {(_inner_poisson_distributionint*) new poisson_distribution<int>(mean)};
+struct _inner_geometric_distributionint:geometric_distribution<int> {};
+OVERLOADABLE geometric_distributionintC geometric_distribution_create(double p, int _) {
+  geometric_distributionintC r = {(_inner_geometric_distributionint*) new geometric_distribution<int>(p)};
   return r;
 }
-OVERLOADABLE void destroy(poisson_distributionintC v) { delete(v.p); }
+OVERLOADABLE void destroy(geometric_distributionintC v) { delete(v.p); }
 
+OVERLOADABLE long call(geometric_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
+OVERLOADABLE int call(geometric_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
 
 struct _inner_poisson_distributionlong:poisson_distribution<long> {};
 OVERLOADABLE poisson_distributionlongC poisson_distribution_create(double mean, long _) {
@@ -118,16 +109,16 @@ OVERLOADABLE poisson_distributionlongC poisson_distribution_create(double mean, 
 }
 OVERLOADABLE void destroy(poisson_distributionlongC v) { delete(v.p); }
 
-OVERLOADABLE int call(poisson_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
-OVERLOADABLE long call(poisson_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
 
-struct _inner_discrete_distributionint:discrete_distribution<int> {};
-OVERLOADABLE discrete_distributionintC discrete_distribution_create(double* start, double* end, int _) {
-  discrete_distributionintC r = {(_inner_discrete_distributionint*) new discrete_distribution<int>(start,end)};
+struct _inner_poisson_distributionint:poisson_distribution<int> {};
+OVERLOADABLE poisson_distributionintC poisson_distribution_create(double mean, int _) {
+  poisson_distributionintC r = {(_inner_poisson_distributionint*) new poisson_distribution<int>(mean)};
   return r;
 }
-OVERLOADABLE void destroy(discrete_distributionintC v) { delete(v.p); }
+OVERLOADABLE void destroy(poisson_distributionintC v) { delete(v.p); }
 
+OVERLOADABLE long call(poisson_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
+OVERLOADABLE int call(poisson_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
 
 struct _inner_discrete_distributionlong:discrete_distribution<long> {};
 OVERLOADABLE discrete_distributionlongC discrete_distribution_create(double* start, double* end, long _) {
@@ -136,8 +127,16 @@ OVERLOADABLE discrete_distributionlongC discrete_distribution_create(double* sta
 }
 OVERLOADABLE void destroy(discrete_distributionlongC v) { delete(v.p); }
 
-OVERLOADABLE int call(discrete_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
+
+struct _inner_discrete_distributionint:discrete_distribution<int> {};
+OVERLOADABLE discrete_distributionintC discrete_distribution_create(double* start, double* end, int _) {
+  discrete_distributionintC r = {(_inner_discrete_distributionint*) new discrete_distribution<int>(start,end)};
+  return r;
+}
+OVERLOADABLE void destroy(discrete_distributionintC v) { delete(v.p); }
+
 OVERLOADABLE long call(discrete_distributionlongC p,mt19937C g) {return p.p->operator()(*g.p);}
+OVERLOADABLE int call(discrete_distributionintC p,mt19937C g) {return p.p->operator()(*g.p);}
 
 struct _inner_uniform_real_distributionfloat:uniform_real_distribution<float> {};
 OVERLOADABLE uniform_real_distributionfloatC uniform_real_distribution_create(float a,float b, float _) {
