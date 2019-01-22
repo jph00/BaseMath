@@ -15,10 +15,7 @@ public func benchmark(title:String, f:()->()) {
 
 extension Thread {
   static func setToTLS<T>(_ value: T, _ key: String)->T {
-    let curr = Thread.current
-    var dict = curr.threadDictionary
-    dict[key] = value
-    curr.threadDictionary = dict
+    Thread.current.threadDictionary[key] = value
     return value
   }
 }

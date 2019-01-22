@@ -11,6 +11,7 @@ extension BaseMathTestsFloat {
       ("testDiv", testDiv),
       ("testSubRev", testSubRev),
       ("testPow", testPow),
+      ("testSumSqr", testSumSqr),
     ]
   }
 }
@@ -23,6 +24,7 @@ extension BaseMathTestsDouble {
       ("testDiv", testDiv),
       ("testSubRev", testSubRev),
       ("testPow", testPow),
+      ("testSumSqr", testSumSqr),
     ]
   }
 }

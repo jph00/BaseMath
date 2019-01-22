@@ -96,5 +96,12 @@ extension TestProtocol {
     v1.pow_(v2)
     XCTAssertEqual(v1, exp)
   }
+
+  func testSumSqr() {
+    let exp = v1.reduce(z, {$0 + $1*$1})
+    XCTAssertEqual(v1.sum(E.sqr), exp)
+    XCTAssertEqual(v1.sumsqr(), exp)
+  }
+
 }
 
