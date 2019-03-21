@@ -99,7 +99,6 @@ print(a1)
 benchmark(title:"C sum") {a1 = smSum(ar1.p, ar1.c)}
 print(a1)
 
-/*
 let p = ar1.p
 let p2 = ar2.p
 let c = Int32(ar1.c)
@@ -138,5 +137,3 @@ benchmark(title:"c sumsqr") {a1 = smSum_sqr_float(ar1.p, ar1.c)}
 print(a1)
 benchmark(title:"lib sumsqr") {a1 = ar1.sumsqr()}
 print(a1)
-*/
-
